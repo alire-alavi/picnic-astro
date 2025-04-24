@@ -1,14 +1,27 @@
 <!doctype html>
-<html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro Basics</title>
-	</head>
+<html lang="fa-IR" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="/src/scripts/mount.js"></script>
+
+    <script defer src="/src/scripts/dependencies/flowbite.min.js"></script>
+    <script defer src="/src/scripts/dependencies/swiper.min.js"></script>
+	<script defer src="src/scripts/dependencies/nouislider.min.js"></script>
+
+    <script defer src="/src/scripts/theme.js"></script>
+    <script defer src="/src/scripts/header/indicator.js"></script>
+    <script defer src="/src/scripts/scroll.js"></script>
+    <script defer src="/src/scripts/header/search.js"></script>
+    <script defer src="/src/scripts/header/magaMenu.js"></script>
+
+    <script defer src="/src/scripts/app.js"></script>
+    <script defer src="/src/scripts/swiper.js"></script>
+
 	<body>
-		<slot />
+    	<div class="flex min-h-screen flex-col">
+			<slot />
+		</div>
 	</body>
 </html>
 
