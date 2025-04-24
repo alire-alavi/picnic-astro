@@ -1,0 +1,46 @@
+---
+const stories = [
+  { id: 1, img: '/src/assets/images/story1.jpg', title: 'تیکا ؛ تست حافظه! تیکا ؛ تست حافظه!' },
+  { id: 2, img: '/src/assets/images/story2.jpg', title: 'رکوردر صدای دانشجویی!' },
+  { id: 3, img: '/src/assets/images/story3.jpg', title: 'خوشگل‌ترین ماوس دیجی‌کالا🖱' },
+  { id: 4, img: '/src/assets/images/story4.jpg', title: 'تخته برش ریور' },
+  { id: 5, img: '/src/assets/images/story5.jpg', title: 'خمیردندان و مسواکِ کودکِ' },
+  { id: 6, img: '/src/assets/images/story6.jpg', title: 'پاور تیکا ؛ تست حافظه!' },
+  { id: 7, img: '/src/assets/images/story7.jpg', title: 'اسباب کشی‌تو راحت می‌کنه' },
+  { id: 8, img: '/src/assets/images/story8.jpg', title: 'جورابای درست حسابی' },
+  { id: 9, img: '/src/assets/images/story9.jpg', title: 'آیس کافی وانیلی🍧🥛' },
+  { id: 10, img: '/src/assets/images/story10.jpg', title: 'یه تجربه ی متفاوت !!!!' },
+  { id: 11, img: '/src/assets/images/story11.jpg', title: 'راهنمای خرید هندزفری' },
+  { id: 12, img: '/src/assets/images/story12.jpg', title: 'چرا دهان‌شویه؟🦷' },
+  { id: 13, img: '/src/assets/images/story13.jpg', title: 'متر 5 متری از برند FISCO' }
+];
+
+---
+<section class="container pt-6 lg:pt-13 2xl:pt-18">
+  <div class="swiper story-slider py-4">
+    <div class="swiper-wrapper !px-px py-2">
+      {stories.map((story) => (
+        <div class="swiper-slide">
+          <button
+            data-modal-target="story-modal"
+            data-modal-toggle="story-modal"
+            class="flex cursor-pointer flex-col items-center justify-center gap-2"
+          >
+            <!-- Thumbnail -->
+            <div
+              class="size-20 overflow-hidden rounded-full border-[3px] border-white ring-2 ring-warning"
+            >
+              <img src={story.img} alt={`story ${story.id}`} />
+            </div>
+            <!-- Title -->
+            <p class="line-clamp-2 w-20 text-center text-xs">
+              {story.title}
+            </p>
+          </button>
+        </div>
+      ))}
+    </div>
+    <div class="swiper-button-next main-slider-nav-button hidden md:flex"></div>
+    <div class="swiper-button-prev main-slider-nav-button hidden md:flex"></div>
+  </div>
+</section>
