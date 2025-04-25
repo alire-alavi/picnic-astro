@@ -1,0 +1,224 @@
+---
+import type { Product } from "../../types/product";
+
+const products: Product[] = [
+  {
+    id: "1",
+    image: { url: "/src/assets/images/p17.jpg", alt: "Blesser" },
+    name: "کفش نایک ایرمکس مشکی رنگین کمانی",
+    price: "1,900,000",
+    discountPrice: "1,000,000",
+    discount: "33%",
+    url: "#",
+    startDate: undefined,
+    expireDate: "2024-12-01T00:00:00",
+  },
+  {
+    id: "2",
+    image: { url: "src/assets/images/p5.webp", alt: "Blesser" },
+    name: "نایک ایرجردن جامپ مَن سفید بنفش",
+    price: "500,000",
+    discountPrice: "400,000",
+    discount: "20%",
+    url: "#",
+    startDate: "2024-05-01T00:00:00",
+    expireDate: "2025-04-01T00:00:00",
+  },
+  {
+    id: "3",
+    image: { url: "/src/assets/images/p24.jpeg", alt: "Blesser" },
+    name: "نایک ایرجردن جامپ مَن سفید بنفش",
+    price: "5,000,000",
+    discountPrice: "4,000,000",
+    discount: "20%",
+    url: "#",
+    startDate: "2024-05-01T00:00:00",
+    expireDate: "2025-05-01T00:00:00",
+  },
+  {
+    id: "4",
+    image: { url: "/src/assets/images/p7.jpeg", alt: "Blesser" },
+    name: "کفش کوهنوردی هامتو کد ۲۲۰۲",
+    price: "2,000,000",
+    discountPrice: "1,120,000",
+    discount: "55%",
+    url: "#",
+    startDate: "2024-05-01T00:00:00",
+    expireDate: "2025-06-01T00:00:00",
+  },
+  {
+    id: "5",
+    image: { url: "/src/assets/images/p6.jpeg", alt: "Blesser" },
+    name: "کفش نایک ایرمکس مشکی قرمز",
+    price: "3,000,000",
+    discountPrice: "2,150,000",
+    discount: "55%",
+    url: "#",
+    startDate: "2024-05-01T00:00:00",
+    expireDate: "2025-06-01T00:00:00",
+  },
+  {
+    id: "6",
+    image: { url: "/src/assets/images/p6.webp", alt: "Blesser" },
+    name: "نایک ایر زوم وین فلو کد ۲۲۶۵",
+    price: "700,000",
+    discountPrice: "610,000",
+    discount: "55%",
+    url: "#",
+    startDate: "2024-05-01T00:00:00",
+    expireDate: "2025-06-01T00:00:00",
+  },
+];
+---
+
+<!-- Incredible Offer Section -->
+<section class="container py-10">
+  <div
+    class="flex gap-x-4 rounded-lg bg-gradient-to-l from-rose-500 to-red-500 px-1 py-3 shadow"
+  >
+    <div class="swiper product-slider-wrapped rounded-base grow p-px">
+      <div
+        class="swiper-wrapper [&>div:last-child_a]:rounded-l-lg [&>div:nth-child(2)_a]:rounded-r-lg"
+      >
+        <div class="swiper-slide">
+          <div class="flex h-full items-center justify-center">
+            <div
+              class="flex flex-col items-center justify-center space-y-4 text-white"
+            >
+              <div
+                class="i-solar-fire-outline size-12 stroke-2"
+              >
+              </div>
+              <div
+                class="flex select-none flex-col items-center justify-center space-y-2 text-lg font-semibold md:text-xl xl:text-2xl"
+              >
+                <p>پیشنهادات</p>
+                <p>شگفت</p>
+                <p>انگیز</p>
+                <div
+                  data-expire-date="2025-05-01T00:00:00"
+                  class="countdown-wrapper flex gap-1 text-sm text-text"
+                >
+                  <div
+                    data-id="seconds"
+                    class="flex size-8 items-center justify-center rounded-lg bg-muted"
+                  >
+                  </div>
+                  <div
+                    data-id="minutes"
+                    class="flex size-8 items-center justify-center rounded-lg bg-muted"
+                  >
+                  </div>
+                  <div
+                    data-id="hours"
+                    class="flex size-8 items-center justify-center rounded-lg bg-muted"
+                  >
+                  </div>
+                  <div
+                    data-id="days"
+                    class="flex size-8 items-center justify-center rounded-lg bg-muted"
+                  >
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {products.map((product) => (
+          <div class="swiper-slide">
+            <a
+              href={product.url}
+              class="relative block overflow-hidden bg-muted"
+            >
+              <div class="mb-4 bg-secondary p-2 lg:p-4">
+                <!-- Special Sale Percentage  -->
+                <div
+                  class="absolute right-2 top-0 rounded-b-full bg-warning px-1 py-1.5 text-center text-sm font-medium text-white md:text-base"
+                >
+                  {product.discount}
+                </div>
+                <!-- Image -->
+                <img
+                  src={product.image.url}
+                  alt={product.image.alt}
+                  class="aspect-[1/1] rounded-xl object-cover"
+                />
+              </div>
+              <div class="mb-1 px-2 lg:px-4">
+                <p
+                  class="line-clamp-2 h-10 text-sm xs:h-12 xs:text-base"
+                >
+                  {product.name}
+                </p>
+
+                <div
+                  class="gap-x-1 text-end font-bold text-primary"
+                >
+                  <div
+                    class="h-5 text-end text-sm text-text/50 xs:text-base"
+                  >
+                    <del>{product.price}</del>
+                  </div>
+
+                  <span class="text-sm xs:text-base"
+                    >{product.discountPrice}</span
+                  >
+                  <span class="text-sm font-light">تومان</span
+                  >
+                </div>
+              </div>
+              <div class="h-8 px-2 lg:px-4">
+                <!-- Countdown -->
+
+                <div
+                  class="product-special-timer text-end text-sm text-warning"
+                  dir="ltr"
+                  data-expire-date={product.expireDate}
+                >
+                </div>
+
+                <!-- Proccess Bar -->
+                <div
+                  class="h-1 w-full rounded-full bg-secondary"
+                  dir="ltr"
+                >
+                  <div
+                    class="progress-bar h-1 rounded-full bg-warning transition-all duration-1000"
+                    data-start-date={product.startDate}
+                    data-expire-date={product.expireDate}
+                  >
+                  </div>
+                </div>
+              </div>
+            </a>
+          </div>
+        ))}
+
+        <!-- Show more -->
+        <div class="swiper-slide">
+          <a
+            href="./special-sale.html"
+            class="flex h-full items-center justify-center bg-muted"
+          >
+            <div
+              class="flex flex-col items-center justify-center gap-y-4 text-primary"
+            >
+              <div
+                class="rounded-full border-2 border-primary p-2"
+              >
+                <div class="i-lucide-chevron-left size-8">
+                </div>
+              </div>
+              <div class="text-lg font-medium">
+                مشاهده بیشتر
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+      <div class="swiper-button-next main-slider-nav-button"></div>
+      <div class="swiper-button-prev main-slider-nav-button"></div>
+    </div>
+  </div>
+</section>
