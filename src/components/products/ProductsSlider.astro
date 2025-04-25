@@ -1,76 +1,74 @@
 ---
 import Product from "./Product.astro"
+import type { Product as ProductType } from "../../types/product.d"
 
-const products = [
+const products: ProductType[] = [
   {
-    id: 1,
+    id: "1",
     name: "جردن وان متالیک گُلد",
     price: "1,000,000",
     discountPrice: "400,000",
     discount: "60%",
-    image: "src/assets/images/p5.webp",
+    image: { url: "src/assets/images/p5.webp", alt: 'jordan-one-gold-metalic'},
     expireDate: "2024-09-01T00:00:00",
     startDate: "2024-05-01T00:00:00",
-    alt: "Blesser",
     url: "./product-detail.html"
   },
   {
-    id: 2,
+    id: "2",
     name: "جردن وان رترو یو ان سی",
     price: "5,000,000",
     discountPrice: "2,000,000",
     discount: "66%",
-    image: "/src/assets/images/p15.jpg",
+    image:{ url: "/src/assets/images/p15.jpg", alt: 'jordan-one-retro-unc'},
     expireDate: "2024-07-01T00:00:00",
     startDate: "2024-05-01T00:00:00",
-    alt: "Blesser",
     url: "./product-detail.html"
   },
   {
-    id: 3,
+    id: "3",
     name: "نایک زوم استراکچر اسپرت",
     price: "3,000,000",
     discountPrice: "1,500,000",
     discount: "50%",
-    image: "/src/assets/images/p6.jpeg",
+    image: {
+      alt: "nike-zoom-structure-sport",
+      url: "/src/assets/images/p6.jpeg",
+    },
     expireDate: "2024-11-01T00:00:00",
     startDate: "2024-05-01T00:00:00",
-    alt: "Blesser",
     url: "./product-detail.html"
   },
   {
-    id: 4,
+    id: "4",
     name: "نایک ایر جردن وان رترو سفید",
     price: "3,200,000",
     discountPrice: "1,100,000",
     discount: "77%",
-    image: "/src/assets/images/p7.jpeg",
+    image: { url: "/src/assets/images/p7.jpeg",
+    alt: 'jordan-one-retro-white'},
     expireDate: "2024-11-01T00:00:00",
     startDate: "2024-05-01T00:00:00",
-    alt: "Blesser",
     url: "./product-detail.html"
   },
   {
-    id: 5,
+    id: "5", 
     name: "نایک زوم استراکچر مشکی سبز",
     price: "2,190,000",
     discountPrice: "1,100,000",
     discount: "44%",
-    image: "/src/assets/images/p6.webp",
+    image: { url: "/src/assets/images/p6.webp", alt: 'nike-zoom-structure-black-green'},
     expireDate: "2024-11-01T00:00:00",
     startDate: "2024-05-01T00:00:00",
-    alt: "Blesser",
     url: "./product-detail.html"
   },
   {
-    id: 6,
+    id: "6",
     name: "کفش نیوبالانس NewBalance 725",
     price: "2,00,000",
-    discount: null,
-    image: "/src/assets/images/images (6).avif",
+    image: { url: "/src/assets/images/images (6).avif", alt: 'newbalance-725'},
     expireDate: "2024-12-01T00:00:00",
     startDate: "2024-05-01T00:00:00",
-    alt: "Blesser",
     url: "./product-detail.html"
   }
 ]
