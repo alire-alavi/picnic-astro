@@ -1,0 +1,65 @@
+---
+import type { Product as ProductType } from "../../types/product.d";
+import type { Offer as OfferType } from "../../types/offer.d";
+const  offer: OfferType   = Astro.props.offer;
+---
+
+<!-- special offer selected products Section -->
+<section class="container">
+    <div
+        class="relative flex w-full flex-col items-center justify-between gap-y-10 overflow-hidden rounded-lg bg-muted p-4 lg:flex-row lg:p-6"
+    >
+        <div
+            class="absolute right-0 top-0 size-20 rounded-full bg-success blur-3xl"
+        >
+        </div>
+        <a href={offer.url} class="absolute inset-0"></a>
+
+        <div
+            class="flex min-w-fit flex-col items-center justify-between gap-x-6 gap-y-4 sm:flex-row lg:justify-start"
+        >
+            <div class="i-unjs-destr size-10"></div>
+            <div class="text-center text-base font-medium">
+                {offer.title}
+            </div>
+            <div
+                class="rounded-full bg-primary-btn px-2 py-1 text-center text-sm text-white"
+            >
+                {offer.discount}
+            </div>
+        </div>
+        <div
+            class="flex w-full min-w-fit flex-col items-center justify-between gap-4 sm:flex-row lg:justify-end"
+        >
+            <!-- Products -->
+            <div class="flex flex-wrap items-center justify-center gap-2">
+                {offer.products ? offer.products.map((product: ProductType) => (
+                    <a
+                        href={product.url}
+                        class="relative flex size-18 items-center justify-center rounded-full bg-secondary"
+                    >
+                        <img
+                            src={product.image.url}
+                            alt={product.image.alt}
+                            class="size-14 rounded-full object-cover"
+                        />
+                        <div class="absolute bottom-0 right-0">
+                            <div
+                                class="flex w-10 items-center justify-center rounded-full bg-warning py-px text-sm font-medium text-white"
+                            >
+                                {product.discount}
+                            </div>
+                        </div>
+                    </a>
+                )) : ''}
+            </div>
+
+            <div
+                class="order-first flex items-center justify-center gap-2 rounded-full bg-success/10 px-4 py-3 text-sm text-success sm:order-last"
+            >
+                <p>{offer.cta}</p>
+                <div class="i-lucide-chevron-left size-5"></div>
+            </div>
+        </div>
+    </div>
+</section>
