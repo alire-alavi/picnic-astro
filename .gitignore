@@ -4,6 +4,8 @@ dist/
 # generated types
 .astro/
 
+blesser/TailwindCSS
+blesser/Template
 blesser/
 
 /blesser
