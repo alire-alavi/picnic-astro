@@ -252,6 +252,12 @@ import Auth from "../../layouts/Auth.astro";
                                 class="otp-input h-14 w-14 rounded-lg border bg-muted text-center text-lg outline-none xs:h-16 xs:w-16 md:text-xl"
                                 maxlength="1"
                             />
+                            <input
+                                type="number"
+                                inputmode="numeric"
+                                class="otp-input h-14 w-14 rounded-lg border bg-muted text-center text-lg outline-none xs:h-16 xs:w-16 md:text-xl"
+                                maxlength="1"
+                            />
                         </div>
                         <p class="h-5 text-sm text-warning">
                             کد تایید اشتباه میباشد
@@ -265,7 +271,7 @@ import Auth from "../../layouts/Auth.astro";
                             >
                                 زمان باقی‌مانده تا ارسال مجدد
                                 <span id="countdown" class="font-bold"
-                                    >2:00</span
+                                    >1:30</span
                                 >
                             </p>
                             <button
@@ -306,9 +312,105 @@ import Auth from "../../layouts/Auth.astro";
     </div>
 
     <script>
-        let countdownMinutes = 2;
-        let countdownSeconds = 0;
+        let countdownMinutes = 1;
+        let countdownSeconds = 30;
         let countdownInterval: ReturnType<typeof setInterval>;
+
+        const phoneNumber = sessionStorage.getItem("emailOrPhone") || "";
+        const challengeToken = sessionStorage.getItem("challengeToken") || "";
+
+        const showError = (message: string) => {
+            const errorElement = document.querySelector(".text-warning");
+            if (errorElement) {
+                errorElement.textContent = message;
+            }
+        };
+
+        const clearError = () => {
+            const errorElement = document.querySelector(".text-warning");
+            if (errorElement) {
+                errorElement.textContent = "";
+            }
+        };
+
+        const sendOTP = async () => {
+            try {
+                const response = await fetch(
+                    "http://localhost:3000/auth/send-otp",
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                            phoneNumber,
+                            challengeToken,
+                        }),
+                    },
+                );
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.message || "Failed to send OTP");
+                }
+
+                if (!data.success) {
+                    showError("خطا در ارسال کد تایید");
+                }
+            } catch (error) {
+                console.error("Error sending OTP:", error);
+                showError(
+                    error instanceof Error
+                        ? error.message
+                        : "خطا در ارسال کد تایید",
+                );
+            }
+        };
+
+        const validateOTP = async (otp: string) => {
+            try {
+                clearError();
+                const response = await fetch(
+                    "http://localhost:3000/auth/validate-otp",
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                            phoneNumber,
+                            otp,
+                            challengeToken,
+                        }),
+                    },
+                );
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.message || "Invalid OTP");
+                }
+
+                if (data.accessToken) {
+                    localStorage.setItem("accessToken", data.accessToken);
+                    localStorage.setItem("user", JSON.stringify(data.user));
+
+                    sessionStorage.removeItem("emailOrPhone");
+                    sessionStorage.removeItem("userId");
+                    sessionStorage.removeItem("challengeToken");
+
+                    window.location.href = "/";
+                } else {
+                    showError("کد تایید نامعتبر است");
+                }
+            } catch (error) {
+                console.error("Error validating OTP:", error);
+                showError("کد تایید اشتباه می‌باشد");
+            }
+        };
+
+        sendOTP();
 
         function updateCountdown() {
             const countdownElement = document.getElementById("countdown");
@@ -348,8 +450,8 @@ import Auth from "../../layouts/Auth.astro";
 
         function resendOTP() {
             if (countdownMinutes != 0 || countdownSeconds != 0) return;
-            countdownMinutes = 2;
-            countdownSeconds = 0;
+            countdownMinutes = 1;
+            countdownSeconds = 30;
             updateCountdown();
             const resendButton = document.getElementById("resendButton");
             const countdownSection =
@@ -362,10 +464,11 @@ import Auth from "../../layouts/Auth.astro";
                 countdownSection.classList.remove("hidden");
             }
 
+            sendOTP();
             startCountdown();
         }
 
-        startCountdown(); // Start the countdown when the page loads
+        startCountdown();
 
         const form = document.querySelector("#otp-form");
         const inputs = document.querySelectorAll(
@@ -388,8 +491,8 @@ import Auth from "../../layouts/Auth.astro";
 
         const verifyOTP = () => {
             if (isAllInputFilled()) {
-                const text = getOtpText();
-                alert(`Your OTP is "${text}". OTP is correct`);
+                const otp = getOtpText();
+                validateOTP(otp);
             }
         };
 
@@ -407,7 +510,7 @@ import Auth from "../../layouts/Auth.astro";
                 const value = target.value;
 
                 if (!/^\d$/.test(value)) {
-                    target.value = ""; // Allow only single digits
+                    target.value = "";
                     return;
                 }
 
@@ -418,7 +521,7 @@ import Auth from "../../layouts/Auth.astro";
                 }
 
                 if (isAllInputFilled()) {
-                    verifyOTP(); // Call alert every time all inputs are filled
+                    verifyOTP();
                 }
             });
         }
@@ -446,7 +549,7 @@ import Auth from "../../layouts/Auth.astro";
                     });
 
                     if (isAllInputFilled()) {
-                        verifyOTP(); // Call alert every time all inputs are filled
+                        verifyOTP();
                     }
                 }
             });
@@ -466,18 +569,16 @@ import Auth from "../../layouts/Auth.astro";
 
             input.addEventListener("input", () => {
                 if (input.value.length > 1) {
-                    input.value = input.value.slice(-1); // Keep only the last digit
+                    input.value = input.value.slice(-1);
                 }
             });
         });
 
-        // Add event listener to resend button
         const resendButton = document.getElementById("resendButton");
         if (resendButton) {
             resendButton.addEventListener("click", resendOTP);
         }
 
-        // Add event listener to verify button
         const verifyButton = document.getElementById("verifyButton");
         if (verifyButton) {
             verifyButton.addEventListener("click", verifyOTP);

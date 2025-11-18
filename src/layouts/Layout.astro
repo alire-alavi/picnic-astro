@@ -5,11 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="/src/scripts/mount.js"></script>
 
+    <script
+      is:inline
+      define:vars={{ PUBLIC_GRAPHQL_URL: import.meta.env.PUBLIC_GRAPHQL_URL }}
+    >
+      window.PUBLIC_GRAPHQL_URL = PUBLIC_GRAPHQL_URL;
+    </script>
+
     <script defer src="/src/scripts/dependencies/flowbite.min.js"></script>
     <script defer src="/src/scripts/dependencies/swiper.min.js"></script>
-	<script defer src="src/scripts/dependencies/nouislider.min.js"></script>
+    <script defer src="src/scripts/dependencies/nouislider.min.js"></script>
 
     <script defer src="/src/scripts/theme.js"></script>
+    <script defer src="/src/scripts/header/auth.js"></script>
     <script defer src="/src/scripts/header/indicator.js"></script>
     <script defer src="/src/scripts/scroll.js"></script>
     <script defer src="/src/scripts/header/search.js"></script>
@@ -17,19 +25,18 @@
 
     <script defer src="/src/scripts/app.js"></script>
     <script defer src="/src/scripts/swiper.js"></script>
-
-	<body>
-    	<div class="flex min-h-screen flex-col">
-			<slot />
-		</div>
-	</body>
+  </head><body>
+    <div class="flex min-h-screen flex-col">
+      <slot />
+    </div>
+  </body>
 </html>
 
 <style>
-	html,
-	body {
-		margin: 0;
-		width: 100%;
-		height: 100%;
-	}
+  html,
+  body {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+  }
 </style>

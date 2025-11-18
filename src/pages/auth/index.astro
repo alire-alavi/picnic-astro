@@ -200,7 +200,7 @@ import Auth from "../../layouts/Auth.astro";
             <div
                 class="relative mx-auto bg-muted px-4 py-8 xs:max-w-[440px] xs:rounded-xl lg:px-10 lg:py-12"
             >
-                <form class="flex flex-col">
+                <form id="auth-form" class="flex flex-col">
                     <!-- logo -->
                     <a href="/" class="mb-10">
                         <img
@@ -214,6 +214,24 @@ import Auth from "../../layouts/Auth.astro";
                         ورود | ثبت نام
                     </h1>
 
+                    <!-- auth method toggle -->
+                    <div class="mb-6 flex items-center justify-center gap-2">
+                        <button
+                            type="button"
+                            id="otp-toggle"
+                            class="auth-toggle-btn active flex-1 rounded-lg border py-2 text-sm transition-all xs:text-base"
+                        >
+                            کد تایید
+                        </button>
+                        <button
+                            type="button"
+                            id="password-toggle"
+                            class="auth-toggle-btn flex-1 rounded-lg border py-2 text-sm transition-all xs:text-base"
+                        >
+                            رمز عبور
+                        </button>
+                    </div>
+
                     <!-- username -->
                     <div class="mb-4 w-full space-y-3">
                         <label
@@ -224,6 +242,7 @@ import Auth from "../../layouts/Auth.astro";
                                 dir="ltr"
                                 type="text"
                                 id="username"
+                                name="username"
                                 placeholder=" "
                                 class="peer w-full rounded-lg bg-transparent p-3 text-left placeholder-transparent outline-none focus:ring-0 xs:p-4"
                             />
@@ -233,7 +252,7 @@ import Auth from "../../layouts/Auth.astro";
                                 شماره موبایل یا ایمیل
                             </span>
                         </label>
-                        <p class="h-5 text-sm text-warning">
+                        <p id="error-message" class="h-5 text-sm text-warning">
                             <!-- شماره موبایل یا ایمیل نامعتبر می باشد -->
                         </p>
                     </div>
@@ -253,4 +272,151 @@ import Auth from "../../layouts/Auth.astro";
             </div>
         </div>
     </div>
+    <script>
+        const authForm = document.getElementById(
+            "auth-form",
+        ) as HTMLFormElement;
+        const errorMessage = document.getElementById("error-message");
+        const otpToggle = document.getElementById("otp-toggle");
+        const passwordToggle = document.getElementById("password-toggle");
+
+        let authMethod: "otp" | "password" = "otp";
+
+        const toggleAuthMethod = (method: "otp" | "password") => {
+            authMethod = method;
+
+            if (otpToggle && passwordToggle) {
+                if (method === "otp") {
+                    otpToggle.classList.add("active");
+                    passwordToggle.classList.remove("active");
+                } else {
+                    passwordToggle.classList.add("active");
+                    otpToggle.classList.remove("active");
+                }
+            }
+        };
+
+        if (otpToggle) {
+            otpToggle.addEventListener("click", () => toggleAuthMethod("otp"));
+        }
+
+        if (passwordToggle) {
+            passwordToggle.addEventListener("click", () =>
+                toggleAuthMethod("password"),
+            );
+        }
+
+        const showError = (message: string) => {
+            if (errorMessage) {
+                errorMessage.textContent = message;
+            }
+        };
+
+        const clearError = () => {
+            if (errorMessage) {
+                errorMessage.textContent = "";
+            }
+        };
+
+        const isEmail = (input: string): boolean => {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(input);
+        };
+
+        const isPhoneNumber = (input: string): boolean => {
+            const phoneRegex = /^(\+98|0)?9\d{9}$/;
+            return phoneRegex.test(input.replace(/\s/g, ""));
+        };
+
+        if (authForm) {
+            authForm.addEventListener("submit", async (e) => {
+                e.preventDefault();
+                clearError();
+
+                const formData = new FormData(e.target as HTMLFormElement);
+                const username = formData.get("username") as string;
+
+                if (!username) return;
+
+                const email = isEmail(username) ? username : "";
+                const phoneNumber = isPhoneNumber(username)
+                    ? username.replace(/\s/g, "")
+                    : "";
+
+                if (!email && !phoneNumber) {
+                    showError("لطفا یک شماره موبایل یا ایمیل معتبر وارد کنید");
+                    return;
+                }
+
+                try {
+                    const response = await fetch(
+                        "http://localhost:3000/users/initiate",
+                        {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                            body: JSON.stringify({
+                                email: email || undefined,
+                                phoneNumber: phoneNumber || undefined,
+                            }),
+                        },
+                    );
+
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        throw new Error(
+                            errorData.message ||
+                                "Failed to initiate authentication",
+                        );
+                    }
+
+                    const data = await response.json();
+
+                    if (data.userId && data.challengeToken) {
+                        sessionStorage.setItem("emailOrPhone", username);
+                        sessionStorage.setItem("userId", data.userId);
+                        sessionStorage.setItem(
+                            "challengeToken",
+                            data.challengeToken,
+                        );
+
+                        if (authMethod === "otp") {
+                            window.location.href = "/auth/login-otp";
+                        } else {
+                            window.location.href = "/auth/login";
+                        }
+                    } else {
+                        showError("خطا در ورود. لطفا دوباره تلاش کنید");
+                    }
+                } catch (error) {
+                    console.error("Error:", error);
+                    showError(
+                        error instanceof Error
+                            ? error.message
+                            : "خطا در ارتباط با سرور",
+                    );
+                }
+            });
+        }
+    </script>
+    <style>
+        .auth-toggle-btn {
+            background-color: transparent;
+            color: hsl(var(--text) / 0.6);
+            border-color: hsl(var(--border));
+        }
+
+        .auth-toggle-btn.active {
+            background-color: hsl(var(--primary));
+            color: white;
+            border-color: hsl(var(--primary));
+            font-weight: 500;
+        }
+
+        .auth-toggle-btn:hover:not(.active) {
+            background-color: hsl(var(--muted));
+            color: hsl(var(--text));
+        }
+    </style>
 </Auth>

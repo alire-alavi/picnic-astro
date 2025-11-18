@@ -1,5 +1,7 @@
 ---
 import Auth from "../../layouts/Auth.astro";
+import { createClient } from "../../lib/graphql";
+let error = "";
 ---
 
 <Auth title="ورود با کلمه عبور">
@@ -207,7 +209,7 @@ import Auth from "../../layouts/Auth.astro";
                 >
                     <i class="i-carbon-chevron-right size-7 stroke-2"></i>
                 </a>
-                <form class="flex flex-col">
+                <form id="login-form" class="flex flex-col">
                     <!-- logo -->
                     <a href="/" class="mb-10">
                         <img
@@ -231,15 +233,17 @@ import Auth from "../../layouts/Auth.astro";
                                 dir="ltr"
                                 type="password"
                                 id="password"
+                                name="password"
                                 placeholder=" "
                                 class="peer w-full rounded-lg bg-transparent p-3 text-left placeholder-transparent outline-none focus:ring-0 xs:p-4"
                             />
                             <span
                                 class="pointer-events-none absolute start-3 -translate-y-1/2 rounded-full bg-muted px-2 text-xs text-text/80 transition-all duration-200 peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-sm peer-focus:text-xs peer-focus:peer-placeholder-shown:top-0 xs:text-sm md:text-sm md:peer-placeholder-shown:text-base md:peer-focus:text-sm lg:start-5"
                             >
+                                رمز عبور
                             </span>
                         </label>
-                        <p class="h-5 text-sm text-warning">
+                        <p id="error-message" class="h-5 text-sm text-warning">
                             <!-- لطفا این قسمت را خالی نگذارید -->
                         </p>
                     </div>
@@ -269,4 +273,89 @@ import Auth from "../../layouts/Auth.astro";
             </div>
         </div>
     </div>
+    <script>
+        const form = document.getElementById("login-form") as HTMLFormElement;
+        const errorMessage = document.getElementById("error-message");
+
+        const emailOrPhone = sessionStorage.getItem("emailOrPhone") || "";
+        const challengeToken = sessionStorage.getItem("challengeToken") || "";
+
+        const showError = (message: string) => {
+            if (errorMessage) {
+                errorMessage.textContent = message;
+            }
+        };
+
+        const clearError = () => {
+            if (errorMessage) {
+                errorMessage.textContent = "";
+            }
+        };
+
+        const isEmail = (input: string): boolean => {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(input);
+        };
+
+        if (form) {
+            form.addEventListener("submit", async (e) => {
+                e.preventDefault();
+                clearError();
+
+                const formData = new FormData(e.target as HTMLFormElement);
+                const password = formData.get("password") as string;
+
+                if (!password) {
+                    showError("لطفا رمز عبور را وارد کنید");
+                    return;
+                }
+
+                if (password.length < 8) {
+                    showError("رمز عبور باید حداقل ۸ کاراکتر باشد");
+                    return;
+                }
+
+                const email = isEmail(emailOrPhone) ? emailOrPhone : undefined;
+
+                try {
+                    const response = await fetch(
+                        "http://localhost:3000/auth/login",
+                        {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                            body: JSON.stringify({
+                                email,
+                                password,
+                                challengeToken,
+                            }),
+                        },
+                    );
+
+                    const data = await response.json();
+
+                    if (!response.ok) {
+                        throw new Error(data.message || "Login failed");
+                    }
+
+                    if (data.accessToken) {
+                        localStorage.setItem("accessToken", data.accessToken);
+                        localStorage.setItem("user", JSON.stringify(data.user));
+
+                        sessionStorage.removeItem("emailOrPhone");
+                        sessionStorage.removeItem("userId");
+                        sessionStorage.removeItem("challengeToken");
+
+                        window.location.href = "/";
+                    } else {
+                        showError("ایمیل یا رمز عبور اشتباه است");
+                    }
+                } catch (error) {
+                    console.error("Error:", error);
+                    showError("ایمیل یا رمز عبور اشتباه است");
+                }
+            });
+        }
+    </script>
 </Auth>
