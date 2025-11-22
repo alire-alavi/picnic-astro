@@ -1,0 +1,413 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Navbar from "../../components/Navbar.astro";
+import { fetchProducts } from "../../lib/graphql";
+import AddToCartButton from "../../components/products/AddToCartButton.astro";
+import ProductsSlider from "../../components/products/ProductsSlider.astro";
+import type { Product } from "../../types/product.d";
+import "../../styles/css/global.css";
+import "../../styles/css/dependencies/swiper.min.css";
+import "../../styles/css/fonts.css";
+import "../../styles/css/app.css";
+import "../../styles/css/base.css";
+import "../../styles/css/dependencies/nouislider.min.css";
+import "../../styles/css/reset.css";
+
+export async function getStaticPaths() {
+    try {
+        const productsResponse = await fetchProducts({}, 100, 0);
+        return productsResponse.items.map((product) => ({
+            params: { slug: product.slug },
+            props: { product },
+        }));
+    } catch (error) {
+        console.error("Failed to fetch products for static paths:", error);
+        return [];
+    }
+}
+
+const { product } = Astro.props;
+const dummyImage = "https://via.placeholder.com/600x600.png?text=Product+Image";
+
+const formattedPrice = new Intl.NumberFormat("fa-IR").format(
+    parseFloat(product.price),
+);
+
+let relatedProducts: Product[] = [];
+try {
+    const relatedResponse = await fetchProducts(
+        { category: product.categoryId },
+        6,
+        0,
+    );
+    relatedProducts = relatedResponse.items.filter((p) => p.id !== product.id);
+} catch (error) {
+    console.error("Failed to fetch related products:", error);
+}
+---
+
+<Layout>
+    <Navbar />
+    <main class="flex-grow bg-background pt-[106px] mt-4">
+        <div class="container pt-10">
+            <!-- Breadcrumb -->
+            <div
+                class="mb-8 flex flex-wrap items-center gap-2 text-sm text-text/60"
+            >
+                <a href="/" class="flex items-center gap-x-1">
+                    بلسر
+                    <div class="i-lucide-chevron-left size-4"></div>
+                </a>
+                <div>
+                    <a href="/shop" class="flex items-center gap-x-1">
+                        محصولات
+                        <div class="i-lucide-chevron-left size-4"></div>
+                    </a>
+                </div>
+                <div class="text-text/80">{product.name}</div>
+            </div>
+
+            <!-- Detail -->
+            <div class="mb-16 grid grid-cols-12 gap-4">
+                <div
+                    class="col-span-12 flex-grow rounded-lg bg-muted px-4 py-6 shadow-md lg:col-span-9"
+                >
+                    <div class="mb-6 grid grid-cols-12 gap-6">
+                        <!-- Product Images -->
+                        <div
+                            class="col-span-12 space-y-4 lg:col-span-4 lg:min-w-fit"
+                        >
+                            <div class="rounded-lg bg-secondary p-4">
+                                <img
+                                    src={product.image?.url || dummyImage}
+                                    alt={product.image?.alt || product.name}
+                                    class="aspect-square w-full rounded-lg object-cover"
+                                />
+                            </div>
+                            <!-- Thumbnail Gallery -->
+                            <div class="grid grid-cols-4 gap-2">
+                                {
+                                    [1, 2, 3, 4].map(() => (
+                                        <div class="cursor-pointer rounded-lg bg-secondary p-2 hover:opacity-80">
+                                            <img
+                                                src={
+                                                    product.image?.url ||
+                                                    dummyImage
+                                                }
+                                                alt={product.name}
+                                                class="aspect-square w-full rounded object-cover"
+                                            />
+                                        </div>
+                                    ))
+                                }
+                            </div>
+                        </div>
+
+                        <!-- Product Info -->
+                        <div
+                            class="col-span-12 flex min-h-full flex-col lg:col-span-8"
+                        >
+                            <h1 class="mb-4 text-xl font-bold lg:text-2xl">
+                                {product.name}
+                            </h1>
+
+                            <div class="mb-6 flex items-center gap-4">
+                                <div
+                                    class="flex items-center gap-1 text-warning"
+                                >
+                                    <i class="i-lucide-star size-5 fill-current"
+                                    ></i>
+                                    <span class="text-sm">4.5</span>
+                                </div>
+                                <div class="text-sm text-text/60">
+                                    (0 دیدگاه)
+                                </div>
+                            </div>
+
+                            <div class="mb-6">
+                                <p class="leading-relaxed text-text/80">
+                                    {product.seo_description}
+                                </p>
+                            </div>
+
+                            <div class="mt-auto">
+                                <div class="flex items-center gap-4">
+                                    <button
+                                        class="flex items-center gap-2 text-text/60 hover:text-primary"
+                                        data-modal-target="share-modal"
+                                        data-modal-toggle="share-modal"
+                                    >
+                                        <i class="i-lucide-share-2 size-5"></i>
+                                        <span class="text-sm">اشتراک گذاری</span
+                                        >
+                                    </button>
+                                    <button
+                                        class="flex items-center gap-2 text-text/60 hover:text-warning"
+                                    >
+                                        <i class="i-lucide-heart size-5"></i>
+                                        <span class="text-sm"
+                                            >افزودن به علاقه‌مندی</span
+                                        >
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Features -->
+                    <div
+                        class="hidden gap-2 md:grid md:grid-cols-2 xl:grid-cols-4"
+                    >
+                        <div
+                            class="flex w-full items-center gap-2 rounded-lg border px-2 py-4 text-sm text-text/60"
+                        >
+                            <i class="i-lucide-shield-check size-6 text-primary"
+                            ></i>
+                            <span>ضمانت اصل بودن کالا</span>
+                        </div>
+                        <div
+                            class="flex w-full items-center gap-2 rounded-lg border px-2 py-4 text-sm text-text/60"
+                        >
+                            <i class="i-lucide-truck size-6 text-primary"></i>
+                            <span>ارسال رایگان</span>
+                        </div>
+                        <div
+                            class="flex w-full items-center gap-2 rounded-lg border px-2 py-4 text-sm text-text/60"
+                        >
+                            <i class="i-lucide-rotate-ccw size-6 text-primary"
+                            ></i>
+                            <span>7 روز ضمانت بازگشت</span>
+                        </div>
+                        <div
+                            class="flex w-full items-center gap-2 rounded-lg border px-2 py-4 text-sm text-text/60"
+                        >
+                            <i class="i-lucide-headphones size-6 text-primary"
+                            ></i>
+                            <span>پشتیبانی 24 ساعته</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Desktop Add to Cart -->
+                <div
+                    class="sticky top-36 col-span-3 hidden h-fit rounded-lg bg-muted px-4 py-6 shadow-md lg:block"
+                >
+                    <div class="mb-6 flex justify-between">
+                        <div class="text-sm text-text/60">فروشنده</div>
+                        <div class="flex items-center gap-x-1">
+                            <span class="text-sm font-medium">بلسر</span>
+                        </div>
+                    </div>
+
+                    <div class="mb-6 space-y-4">
+                        <div class="flex items-center justify-between">
+                            <span class="text-text/60">قیمت:</span>
+                            <div class="flex items-baseline gap-1">
+                                <span class="text-2xl font-bold text-primary"
+                                    >{formattedPrice}</span
+                                >
+                                <span class="text-sm text-text/60">تومان</span>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center gap-2 text-sm">
+                            <i class="i-lucide-check-circle size-5 text-success"
+                            ></i>
+                            <span class="text-success">موجود در انبار</span>
+                        </div>
+                    </div>
+
+                    <AddToCartButton
+                        productId={product.id}
+                        productName={product.name}
+                        productPrice={product.price}
+                    />
+                </div>
+
+                <!-- Mobile Add to Cart -->
+                <div
+                    data-onscrollclass="translate-y-1/2"
+                    class="fixed inset-x-0 bottom-0 z-20 rounded-t-xl bg-muted px-4 pb-20 pt-4 transition-all duration-300 lg:hidden"
+                >
+                    <div class="mb-2 flex items-center justify-between">
+                        <div class="flex items-baseline gap-1">
+                            <span class="text-xl font-bold text-primary"
+                                >{formattedPrice}</span
+                            >
+                            <span class="text-sm text-text/60">تومان</span>
+                        </div>
+                    </div>
+                    <AddToCartButton
+                        productId={product.id}
+                        productName={product.name}
+                        productPrice={product.price}
+                    />
+                </div>
+            </div>
+
+            <!-- Related Products -->
+            {
+                relatedProducts.length > 0 && (
+                    <div class="mb-16">
+                        <div class="mb-6 flex items-center justify-between gap-x-6 text-nowrap">
+                            <h2 class="font-semiBold lg:text-xl">
+                                کالا های مرتبط
+                            </h2>
+                            <div class="h-[0.25px] w-full bg-secondary" />
+                        </div>
+                        <ProductsSlider products={relatedProducts}>
+                            کالاهای مرتبط
+                        </ProductsSlider>
+                    </div>
+                )
+            }
+
+            <!-- Information Tabs -->
+            <div class="mb-16 rounded-lg bg-muted px-4 py-6 shadow-md">
+                <ul
+                    class="mb-6 flex justify-between gap-x-2 border-b text-center text-sm font-medium xs:justify-start xs:gap-x-4 xs:text-base"
+                >
+                    <li>
+                        <div
+                            class="inline-block cursor-pointer rounded-t-lg border-b-2 border-primary px-2 pb-2 text-primary duration-200"
+                        >
+                            معرفی
+                        </div>
+                    </li>
+                    <li>
+                        <div
+                            class="inline-block cursor-pointer rounded-t-lg border-b-2 border-transparent px-2 pb-2 duration-200 hover:text-primary"
+                        >
+                            مشخصات
+                        </div>
+                    </li>
+                    <li>
+                        <div
+                            class="inline-block cursor-pointer rounded-t-lg border-b-2 border-transparent px-2 pb-2 duration-200 hover:text-primary"
+                        >
+                            دیدگاه‌ها
+                        </div>
+                    </li>
+                </ul>
+
+                <div class="divide-y divide-border">
+                    <!-- Description -->
+                    <div class="py-6">
+                        <div id="description" class="-translate-y-36"></div>
+                        <div class="relative mb-8 w-fit text-xl font-medium">
+                            توضیحات محصول
+                        </div>
+                        <div class="prose dark:prose-invert max-w-none">
+                            <p class="leading-relaxed">
+                                {product.seo_description}
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Specs -->
+                    <div class="py-6">
+                        <div id="specs" class="-translate-y-60"></div>
+                        <div class="relative mb-8 w-fit text-xl font-medium">
+                            مشخصات فنی
+                        </div>
+                        <ul class="space-y-4 text-sm">
+                            <li class="flex justify-between border-b pb-4">
+                                <span class="text-text/60">شناسه محصول:</span>
+                                <span class="font-medium">{product.id}</span>
+                            </li>
+                            <li class="flex justify-between border-b pb-4">
+                                <span class="text-text/60">دسته‌بندی:</span>
+                                <span class="font-medium"
+                                    >{product.categoryId}</span
+                                >
+                            </li>
+                            <li class="flex justify-between border-b pb-4">
+                                <span class="text-text/60">تاریخ ایجاد:</span>
+                                <span class="font-medium">
+                                    {
+                                        new Date(
+                                            product.createdAt,
+                                        ).toLocaleDateString("fa-IR")
+                                    }
+                                </span>
+                            </li>
+                            {
+                                product.seo_keywords && (
+                                    <li class="flex justify-between border-b pb-4">
+                                        <span class="text-text/60">
+                                            برچسب‌ها:
+                                        </span>
+                                        <span class="font-medium">
+                                            {product.seo_keywords}
+                                        </span>
+                                    </li>
+                                )
+                            }
+                        </ul>
+                    </div>
+
+                    <!-- Comments -->
+                    <div class="py-6">
+                        <div id="comment" class="-translate-y-60"></div>
+                        <div class="relative mb-8 w-fit text-xl font-medium">
+                            نظرات کاربران
+                        </div>
+                        <div class="text-center text-text/60">
+                            <p>هنوز نظری برای این محصول ثبت نشده است.</p>
+                            <p class="mt-2">اولین نفری باشید که نظر می‌دهید!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Share Modal -->
+    <div
+        id="share-modal"
+        tabindex="-1"
+        aria-hidden="true"
+        class="fixed left-0 right-0 top-0 z-50 hidden h-[calc(100%-1rem)] max-h-full w-full overflow-y-auto overflow-x-hidden p-4 md:inset-0"
+    >
+        <div class="relative max-h-full w-full max-w-sm">
+            <div class="overflow-hidden rounded-lg border bg-muted shadow">
+                <div class="px-4 py-5 sm:px-6">
+                    <div class="flex items-center justify-between">
+                        <h3 class="md:text-lg">اشتراک گذاری</h3>
+                        <button
+                            class="text-text/60 duration-300 hover:text-text/95"
+                            data-modal-hide="share-modal"
+                            type="button"
+                        >
+                            <div class="i-lucide-x size-6"></div>
+                            <span class="sr-only">بستن</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="space-y-6 px-4 py-5 sm:p-6">
+                    <div class="flex items-center gap-4">
+                        <button class="text-primary">
+                            <div class="i-lucide-copy size-6"></div>
+                        </button>
+                        <div class="w-full">
+                            <div
+                                class="line-clamp-1 w-full select-none rounded-lg border px-4 py-3"
+                            >
+                                {Astro.url.href}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex justify-end">
+                        <button
+                            data-modal-hide="share-modal"
+                            type="button"
+                            class="btn-warning w-full rounded-lg px-4 py-2 md:w-auto"
+                        >
+                            <span>بستن</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</Layout>

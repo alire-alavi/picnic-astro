@@ -1,7 +1,7 @@
 ---
 import type { Product as ProductType } from "../../types/product.d";
 import type { Offer as OfferType } from "../../types/offer.d";
-const  offer: OfferType   = Astro.props.offer;
+const offer: OfferType = Astro.props.offer;
 ---
 
 <!-- special offer selected products Section -->
@@ -33,25 +33,35 @@ const  offer: OfferType   = Astro.props.offer;
         >
             <!-- Products -->
             <div class="flex flex-wrap items-center justify-center gap-2">
-                {offer.products ? offer.products.map((product: ProductType) => (
-                    <a
-                        href={product.url}
-                        class="relative flex size-18 items-center justify-center rounded-full bg-secondary"
-                    >
-                        <img
-                            src={product.image.url}
-                            alt={product.image.alt}
-                            class="size-14 rounded-full object-cover"
-                        />
-                        <div class="absolute bottom-0 right-0">
-                            <div
-                                class="flex w-10 items-center justify-center rounded-full bg-warning py-px text-sm font-medium text-white"
-                            >
-                                {product.discount}
-                            </div>
-                        </div>
-                    </a>
-                )) : ''}
+                {
+                    offer.products
+                        ? offer.products.map((product: ProductType) => {
+                              const dummyImage =
+                                  "https://via.placeholder.com/100x100.png?text=Product";
+                              return (
+                                  <a
+                                      href={`/products/${product.slug}`}
+                                      class="relative flex size-18 items-center justify-center rounded-full bg-secondary"
+                                  >
+                                      <img
+                                          src={product.image?.url || dummyImage}
+                                          alt={
+                                              product.image?.alt || product.name
+                                          }
+                                          class="size-14 rounded-full object-cover"
+                                      />
+                                      <div class="absolute bottom-0 right-0">
+                                          {product.discount && (
+                                              <div class="flex w-10 items-center justify-center rounded-full bg-warning py-px text-sm font-medium text-white">
+                                                  {product.discount}
+                                              </div>
+                                          )}
+                                      </div>
+                                  </a>
+                              );
+                          })
+                        : ""
+                }
             </div>
 
             <div

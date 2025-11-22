@@ -1,84 +1,17 @@
 ---
-import Product from "./Product.astro"
-import type { Product as ProductType } from "../../types/product.d"
+import Product from "./Product.astro";
+import type { Product as ProductType } from "../../types/product.d";
 
-const products: ProductType[] = [
-  {
-    id: "1",
-    name: "جردن وان متالیک گُلد",
-    price: "1,000,000",
-    discountPrice: "400,000",
-    discount: "60%",
-    image: { url: "src/assets/images/p5.webp", alt: 'jordan-one-gold-metalic'},
-    expireDate: "2024-09-01T00:00:00",
-    startDate: "2024-05-01T00:00:00",
-    url: "./product-detail.html"
-  },
-  {
-    id: "2",
-    name: "جردن وان رترو یو ان سی",
-    price: "5,000,000",
-    discountPrice: "2,000,000",
-    discount: "66%",
-    image:{ url: "/src/assets/images/p15.jpg", alt: 'jordan-one-retro-unc'},
-    expireDate: "2024-07-01T00:00:00",
-    startDate: "2024-05-01T00:00:00",
-    url: "./product-detail.html"
-  },
-  {
-    id: "3",
-    name: "نایک زوم استراکچر اسپرت",
-    price: "3,000,000",
-    discountPrice: "1,500,000",
-    discount: "50%",
-    image: {
-      alt: "nike-zoom-structure-sport",
-      url: "/src/assets/images/p6.jpeg",
-    },
-    expireDate: "2024-11-01T00:00:00",
-    startDate: "2024-05-01T00:00:00",
-    url: "./product-detail.html"
-  },
-  {
-    id: "4",
-    name: "نایک ایر جردن وان رترو سفید",
-    price: "3,200,000",
-    discountPrice: "1,100,000",
-    discount: "77%",
-    image: { url: "/src/assets/images/p7.jpeg",
-    alt: 'jordan-one-retro-white'},
-    expireDate: "2024-11-01T00:00:00",
-    startDate: "2024-05-01T00:00:00",
-    url: "./product-detail.html"
-  },
-  {
-    id: "5", 
-    name: "نایک زوم استراکچر مشکی سبز",
-    price: "2,190,000",
-    discountPrice: "1,100,000",
-    discount: "44%",
-    image: { url: "/src/assets/images/p6.webp", alt: 'nike-zoom-structure-black-green'},
-    expireDate: "2024-11-01T00:00:00",
-    startDate: "2024-05-01T00:00:00",
-    url: "./product-detail.html"
-  },
-  {
-    id: "6",
-    name: "کفش نیوبالانس NewBalance 725",
-    price: "2,00,000",
-    image: { url: "/src/assets/images/images (6).avif", alt: 'newbalance-725'},
-    expireDate: "2024-12-01T00:00:00",
-    startDate: "2024-05-01T00:00:00",
-    url: "./product-detail.html"
-  }
-]
+interface Props {
+  products: ProductType[];
+}
+
+const { products } = Astro.props;
 ---
 
 <!-- Special Sale Section -->
 <section class="container py-10">
-  <div
-    class="mb-6 flex items-center justify-between gap-x-6 text-nowrap"
-  >
+  <div class="mb-6 flex items-center justify-between gap-x-6 text-nowrap">
     <h4 class="font-semiBold lg:text-xl"><slot /></h4>
     <div class="h-[0.25px] w-full bg-border"></div>
     <a href="#">
@@ -94,11 +27,13 @@ const products: ProductType[] = [
   <div>
     <div class="swiper product-slider !px-px pt-4">
       <div class="swiper-wrapper py-px">
-        {products.map((product) => (
-          <div class="swiper-slide">
-            <Product product={product}/>
-          </div>
-        ))}
+        {
+          products.map((product) => (
+            <div class="swiper-slide">
+              <Product product={product} />
+            </div>
+          ))
+        }
       </div>
     </div>
   </div>

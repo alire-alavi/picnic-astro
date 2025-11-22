@@ -1,6 +1,12 @@
 ---
 import type { Product as ProductType } from "../../types/product.d";
-const  product: ProductType = Astro.props.product
+
+interface Props {
+  product: ProductType;
+}
+
+const { product } = Astro.props;
+const dummyImage = "https://via.placeholder.com/400x400.png?text=Product+Image";
 ---
 
 <!-- Product -->
@@ -8,40 +14,34 @@ const  product: ProductType = Astro.props.product
   class="border-gradient relative rounded-[--product-card-radius] p-px [--product-card-radius:theme(borderRadius.2xl)] before:absolute before:-inset-px before:h-[calc(100%+2px)] before:w-[calc(100%+2px)] before:rounded-[--product-card-radius] before:content-['']"
 >
   <a
-    href={product.url ? product.url:  "#"}
+    href={`/products/${product.slug}`}
     class="relative block overflow-hidden rounded-[calc(var(--product-card-radius)-1px)] bg-muted"
   >
     <div class="mb-4 bg-secondary p-2 lg:p-4">
       <!-- Special Sale Percentage -->
-      {product.discount && (
-        <div
-          class="absolute right-2 top-0 rounded-b-full bg-warning px-1 py-1.5 text-center text-sm font-medium text-white md:text-base"
-        >
-          {product.discount}
-        </div>
-      )}
+      {
+        product.discount && (
+          <div class="absolute right-2 top-0 rounded-b-full bg-warning px-1 py-1.5 text-center text-sm font-medium text-white md:text-base">
+            {product.discount}
+          </div>
+        )
+      }
       <!-- Image -->
       <img
-        src={product.image.url}
-        alt={product.image.alt}
+        src={product.image?.url || dummyImage}
+        alt={product.image?.alt || product.name}
         class="aspect-[1/1] w-full rounded-xl object-cover"
       />
     </div>
     <div class="mb-1 px-2 lg:px-4">
-      <p
-        class="line-clamp-2 h-10 text-sm xs:h-12 xs:text-base"
-      >
+      <p class="line-clamp-2 h-10 text-sm xs:h-12 xs:text-base">
         {product.name}
       </p>
 
       <div class="gap-x-1 text-end font-bold text-primary">
-          <div
-            class="h-5 text-end text-sm text-text/50 xs:text-base"
-          >
-        {product.discountPrice && (
-            <del>{product.discountPrice}</del>
-        )}
-          </div>
+        <div class="h-5 text-end text-sm text-text/50 xs:text-base">
+          {product.discountPrice && <del>{product.discountPrice}</del>}
+        </div>
 
         <span class="text-sm xs:text-base">{product.price}</span>
         <span class="text-sm font-light">تومان</span>
@@ -49,27 +49,28 @@ const  product: ProductType = Astro.props.product
     </div>
     <div class="h-8 px-2 lg:px-4">
       <!-- Countdown -->
-      {product.expireDate && (
-        <div
-          class="product-special-timer text-end text-sm text-warning"
-          dir="ltr"
-          data-expire-date={product.expireDate}
-        ></div>
-      )}
+      {
+        product.expireDate && (
+          <div
+            class="product-special-timer text-end text-sm text-warning"
+            dir="ltr"
+            data-expire-date={product.expireDate}
+          />
+        )
+      }
 
       <!-- Progress Bar -->
-      {product.startDate && product.expireDate && (
-        <div
-          class="h-1 w-full rounded-full bg-secondary"
-          dir="ltr"
-        >
-          <div
-            class="progress-bar h-1 rounded-full bg-warning transition-all duration-1000"
-            data-start-date={product.startDate}
-            data-expire-date={product.expireDate}
-          ></div>
-        </div>
-      )}
+      {
+        product.startDate && product.expireDate && (
+          <div class="h-1 w-full rounded-full bg-secondary" dir="ltr">
+            <div
+              class="progress-bar h-1 rounded-full bg-warning transition-all duration-1000"
+              data-start-date={product.startDate}
+              data-expire-date={product.expireDate}
+            />
+          </div>
+        )
+      }
     </div>
   </a>
 </div>

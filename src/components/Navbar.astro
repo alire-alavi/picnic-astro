@@ -639,9 +639,10 @@
           >
             <span class="i-lucide-shopping-cart h-6 w-6"></span>
             <span
-              class="absolute -right-1.5 -top-2.5 h-5 w-5 items-center justify-center rounded-full bg-primary-btn text-center text-sm leading-6 text-white"
+              data-cart-badge
+              class="absolute -right-1.5 -top-2.5 h-5 w-5 items-center justify-center rounded-full bg-primary-btn text-center text-sm leading-6 text-white hidden"
             >
-              4
+              0
             </span>
           </button>
 
@@ -654,7 +655,7 @@
             <div class="flex flex-col justify-between text-sm">
               <!-- header -->
               <div class="flex justify-between px-5 py-4">
-                <div>2 مورد</div>
+                <div data-cart-count>0 مورد</div>
                 <a
                   href="./checkout-cart.html"
                   class="flex items-center text-primary duration-200 hover:text-primary/80"
@@ -664,186 +665,23 @@
                 </a>
               </div>
               <!-- Products -->
-              <ul class="max-h-60 divide-y overflow-y-auto p-5">
-                <!-- product1 -->
-                <li class="flex gap-x-3 pb-5 pt-8">
-                  <!-- Image -->
-                  <div class="relative min-w-fit">
-                    <button
-                      class="absolute -top-2 right-0 rounded-lg border bg-muted duration-200 hover:bg-background"
-                    >
-                      <div class="i-lucide-trash m-2 h-4 w-4 text-warning">
-                      </div>
-                    </button>
-                    <a href="./product-detail.html">
-                      <img
-                        class="h-[120px] w-[120px] rounded-2xl"
-                        src="/src/assets/images/p1.png"
-                        alt="Blesser"
-                      />
-                    </a>
-                  </div>
-                  <!-- Information -->
-                  <div class="flex w-full flex-col">
-                    <a href="./product-detail.html" class="line-clamp-2 h-10">
-                      کفش نیوبالانس NewBalanceوبالانس NewBalanceوبالانس
-                      NewBalanceوبالانس NewBalanceوبالانس NewBalance
-                    </a>
-                    <div class="flex items-center gap-x-4 pt-3 text-text/80">
-                      <p>تعداد : 1</p>
-                      <div class="h-3 w-0.5 bg-secondary"></div>
-                      <p>سایز : 44</p>
-                    </div>
-                    <div class="flex items-center justify-between gap-x-5 py-3">
-                      <!-- price -->
-                      <div class="flex items-center gap-x-2">
-                        <div class="text-lg font-medium text-primary">
-                          1,300,000,000
-                        </div>
-                        <p class="text-sm text-primary">تومان</p>
-                      </div>
-                      <!-- Quantity -->
-
-                      <div
-                        class="flex h-10 w-24 items-center justify-between rounded-lg border px-2 py-1"
-                      >
-                        <button
-                          type="button"
-                          class="i-lucide-plus size-8 text-success"></button>
-                        <input
-                          value="1"
-                          disabled=""
-                          type="number"
-                          class="flex h-5 w-full grow select-none items-center justify-center bg-transparent text-center text-sm outline-none"
-                        />
-                        <button
-                          type="button"
-                          class="i-lucide-minus size-8 text-warning"></button>
-                      </div>
-                    </div>
-                  </div>
-                </li>
-                <li class="flex gap-x-3 pb-5 pt-8">
-                  <!-- Image -->
-                  <div class="relative min-w-fit">
-                    <button
-                      class="absolute -top-2 right-0 rounded-lg border bg-muted duration-200 hover:bg-background"
-                    >
-                      <div class="i-lucide-trash m-2 h-4 w-4 text-warning">
-                      </div>
-                    </button>
-                    <a href="./product-detail.html">
-                      <img
-                        class="h-[120px] w-[120px] rounded-2xl"
-                        src="/src/assets/images/p1.png"
-                        alt="Blesser"
-                      />
-                    </a>
-                  </div>
-                  <!-- Information -->
-                  <div class="flex w-full flex-col">
-                    <a href="./product-detail.html" class="line-clamp-2 h-10">
-                      کفش نیوبالانس NewBalanceوبالانس NewBalanceوبالانس
-                      NewBalanceوبالانس NewBalanceوبالانس NewBalance
-                    </a>
-                    <div class="flex items-center gap-x-4 pt-3 text-text/80">
-                      <p>تعداد : 1</p>
-                      <div class="h-3 w-0.5 bg-secondary"></div>
-                      <p>سایز : 44</p>
-                    </div>
-                    <div class="flex items-center justify-between gap-x-5 py-3">
-                      <!-- price -->
-                      <div class="flex items-center gap-x-2">
-                        <div class="text-lg font-medium text-primary">
-                          1,300,000,000
-                        </div>
-                        <p class="text-sm text-primary">تومان</p>
-                      </div>
-                      <!-- Quantity -->
-
-                      <div
-                        class="flex h-10 w-24 items-center justify-between rounded-lg border px-2 py-1"
-                      >
-                        <button
-                          type="button"
-                          class="i-lucide-plus size-8 text-success"></button>
-                        <input
-                          value="1"
-                          disabled=""
-                          type="number"
-                          class="flex h-5 w-full grow select-none items-center justify-center bg-transparent text-center text-sm outline-none"
-                        />
-                        <button
-                          type="button"
-                          class="i-lucide-minus size-8 text-warning"></button>
-                      </div>
-                    </div>
-                  </div>
-                </li>
-                <li class="flex gap-x-3 pb-5 pt-8">
-                  <!-- Image -->
-                  <div class="relative min-w-fit">
-                    <button
-                      class="absolute -top-2 right-0 rounded-lg border bg-muted duration-200 hover:bg-background"
-                    >
-                      <div class="i-lucide-trash m-2 h-4 w-4 text-warning">
-                      </div>
-                    </button>
-                    <a href="./product-detail.html">
-                      <img
-                        class="h-[120px] w-[120px] rounded-2xl"
-                        src="/src/assets/images/p1.png"
-                        alt="Blesser"
-                      />
-                    </a>
-                  </div>
-                  <!-- Information -->
-                  <div class="flex w-full flex-col">
-                    <a href="./product-detail.html" class="line-clamp-2 h-10">
-                      کفش نیوبالانس NewBalanceوبالانس NewBalanceوبالانس
-                      NewBalanceوبالانس NewBalanceوبالانس NewBalance
-                    </a>
-                    <div class="flex items-center gap-x-4 pt-3 text-text/80">
-                      <p>تعداد : 1</p>
-                      <div class="h-3 w-0.5 bg-secondary"></div>
-                      <p>سایز : 44</p>
-                    </div>
-                    <div class="flex items-center justify-between gap-x-5 py-3">
-                      <!-- price -->
-                      <div class="flex items-center gap-x-2">
-                        <div class="text-lg font-medium text-primary">
-                          1,300,000,000
-                        </div>
-                        <p class="text-sm text-primary">تومان</p>
-                      </div>
-                      <!-- Quantity -->
-
-                      <div
-                        class="flex h-10 w-24 items-center justify-between rounded-lg border px-2 py-1"
-                      >
-                        <button
-                          type="button"
-                          class="i-lucide-plus size-8 text-success"></button>
-                        <input
-                          value="1"
-                          disabled=""
-                          type="number"
-                          class="flex h-5 w-full grow select-none items-center justify-center bg-transparent text-center text-sm outline-none"
-                        />
-                        <button
-                          type="button"
-                          class="i-lucide-minus size-8 text-warning"></button>
-                      </div>
-                    </div>
-                  </div>
-                </li>
+              <ul data-cart-items class="max-h-60 divide-y overflow-y-auto p-5">
+                <div
+                  class="flex flex-col items-center justify-center py-8 text-text/60"
+                >
+                  <div class="i-lucide-shopping-cart h-16 w-16 mb-4"></div>
+                  <p>در حال بارگذاری...</p>
+                </div>
               </ul>
               <!-- footer -->
               <div class="flex items-center justify-between border-t p-5">
                 <div class="flex flex-col items-center">
                   <p class="text-text/60">مبلغ قابل پرداخت</p>
-                  <div class="flex items-center gap-x-1 text-primary">
-                    <p class="text-lg font-bold">10,130,000</p>
+                  <div
+                    data-cart-total
+                    class="flex items-center gap-x-1 text-primary"
+                  >
+                    <p class="text-lg font-bold">0</p>
                     <p class="text-sm">تومان</p>
                   </div>
                 </div>
@@ -2493,3 +2331,9 @@
   class="fixed inset-0 z-20 hidden bg-black/40 backdrop-blur-md"
 >
 </div>
+
+<script>
+  import { initializeCart } from "../scripts/cart";
+
+  initializeCart();
+</script>

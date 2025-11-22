@@ -1,0 +1,112 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Navbar from "../components/Navbar.astro";
+import AddToCartButton from "../components/products/AddToCartButton.astro";
+
+// Sample products for demonstration
+const sampleProducts = [
+    {
+        id: "product-uuid-1",
+        name: "کفش نایک ایرمکس",
+        price: "2,500,000",
+        image: "/src/assets/images/product-1.webp",
+        inStock: true,
+    },
+    {
+        id: "product-uuid-2",
+        name: "کفش آدیداس اورجینال",
+        price: "1,800,000",
+        image: "/src/assets/images/product-2.webp",
+        inStock: true,
+    },
+    {
+        id: "product-uuid-3",
+        name: "کفش نیوبالانس 574",
+        price: "3,200,000",
+        image: "/src/assets/images/product-3.webp",
+        inStock: false,
+    },
+];
+---
+
+<Layout>
+    <Navbar />
+
+    <main class="container mx-auto px-4 py-24">
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold mb-4">
+                نمونه اضافه کردن به سبد خرید
+            </h1>
+            <p class="text-text/80">
+                این صفحه نمایشگر نحوه استفاده از سیستم سبد خرید است. برای تست
+                کردن، ابتدا وارد حساب کاربری خود شوید.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {
+                sampleProducts.map((product) => (
+                    <div class="border rounded-lg p-4 bg-muted">
+                        <img
+                            src={product.image}
+                            alt={product.name}
+                            class="w-full h-64 object-cover rounded-lg mb-4"
+                        />
+                        <h3 class="text-xl font-semibold mb-2">
+                            {product.name}
+                        </h3>
+                        <div class="flex items-center gap-2 mb-4">
+                            <span class="text-2xl font-bold text-primary">
+                                {product.price}
+                            </span>
+                            <span class="text-sm text-text/60">تومان</span>
+                        </div>
+
+                        <AddToCartButton
+                            productId={product.id}
+                            productName={product.name}
+                            productPrice={product.price}
+                            inStock={product.inStock}
+                        />
+
+                        {!product.inStock && (
+                            <p class="mt-2 text-sm text-warning text-center">
+                                این محصول موجود نیست
+                            </p>
+                        )}
+                    </div>
+                ))
+            }
+        </div>
+
+        <div class="mt-12 p-6 bg-muted rounded-lg">
+            <h2 class="text-2xl font-bold mb-4">راهنمای استفاده</h2>
+            <ol class="list-decimal list-inside space-y-2 text-text/80">
+                <li>
+                    ابتدا وارد حساب کاربری خود شوید (در صورتی که وارد نشده‌اید)
+                </li>
+                <li>روی دکمه "افزودن به سبد خرید" کلیک کنید</li>
+                <li>شماره روی آیکون سبد خرید در نوار بالا تغییر می‌کند</li>
+                <li>
+                    با کلیک روی آیکون سبد خرید، محصولات اضافه شده را مشاهده کنید
+                </li>
+                <li>مجموع قیمت در پایین سبد خرید نمایش داده می‌شود</li>
+            </ol>
+        </div>
+
+        <div class="mt-8 p-6 bg-warning/10 border border-warning rounded-lg">
+            <h3 class="text-xl font-bold mb-2 text-warning">توجه</h3>
+            <p class="text-text/80">
+                این صفحه فقط برای نمایش و تست است. UUID محصولات در این صفحه
+                نمونه هستند. برای استفاده واقعی، باید UUID محصولات را از دیتابیس
+                دریافت کنید.
+            </p>
+        </div>
+    </main>
+</Layout>
+
+<style>
+    main {
+        min-height: calc(100vh - 200px);
+    }
+</style>

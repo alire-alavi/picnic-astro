@@ -1,0 +1,72 @@
+---
+interface Props {
+    productId: string;
+    productName: string;
+    productPrice: string;
+    inStock?: boolean;
+}
+
+const { productId, productName, productPrice, inStock = true } = Astro.props;
+---
+
+<div class="add-to-cart-wrapper">
+    {
+        inStock ? (
+            <button
+                data-product-id={productId}
+                data-add-to-cart
+                class="btn-primary w-full py-3 px-6 rounded-lg flex items-center justify-center gap-2"
+            >
+                <span class="i-lucide-shopping-cart h-5 w-5" />
+                افزودن به سبد خرید
+            </button>
+        ) : (
+            <button
+                disabled
+                class="btn-disabled w-full py-3 px-6 rounded-lg flex items-center justify-center gap-2 opacity-50 cursor-not-allowed"
+            >
+                <span class="i-lucide-x-circle h-5 w-5" />
+                ناموجود
+            </button>
+        )
+    }
+</div>
+
+<script>
+    import { handleAddToCart } from "../../scripts/add-to-cart";
+
+    document.addEventListener("DOMContentLoaded", () => {
+        const addToCartButtons =
+            document.querySelectorAll("[data-add-to-cart]");
+
+        addToCartButtons.forEach((button) => {
+            button.addEventListener("click", async (e) => {
+                const btn = e.currentTarget as HTMLButtonElement;
+                const productId = btn.getAttribute("data-product-id");
+
+                if (!productId) return;
+
+                btn.disabled = true;
+                btn.innerHTML =
+                    '<span class="i-lucide-loader-2 h-5 w-5 animate-spin"></span> در حال افزودن...';
+
+                try {
+                    await handleAddToCart(productId, 1);
+
+                    btn.innerHTML =
+                        '<span class="i-lucide-check h-5 w-5"></span> اضافه شد';
+
+                    setTimeout(() => {
+                        btn.disabled = false;
+                        btn.innerHTML =
+                            '<span class="i-lucide-shopping-cart h-5 w-5"></span> افزودن به سبد خرید';
+                    }, 2000);
+                } catch (error) {
+                    btn.disabled = false;
+                    btn.innerHTML =
+                        '<span class="i-lucide-shopping-cart h-5 w-5"></span> افزودن به سبد خرید';
+                }
+            });
+        });
+    });
+</script>

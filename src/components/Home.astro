@@ -5,48 +5,29 @@ import CategoryHero from "./categories/CategoryHero.astro";
 import OfferLiteHero from "./marketing/OfferLiteHero.astro";
 import ProductsSliderSideBanner from "./marketing/ProductsSliderSideBanner.astro";
 import type { Product as ProductType } from "../types/product.d";
+import { fetchProducts } from "../lib/graphql";
 
-const offerProducts: ProductType[] = [
-  {
-    id: "1",
-    image: {
-        url: "src/assets/images/p5.webp"
-    },
-    price: "1,000,000",
-    discount: "%65",
-    url: "./product-detail.html"
-  },
-  {
-    id: "2",
-    image: { url: "/src/assets/images/p6.webp" },
-    discount: "%65",
-    url: "./product-detail.html"
-  },
-  {
-    id: "3",
-    image: {url:  "/src/assets/images/p6.jpeg"},
-    discount: "%65",
-    url: "./product-detail.html"
-  },
-  {
-    id: "4",
-    image: { url: "/src/assets/images/p17.jpg" },
-    discount: "%65",
-    url: "./product-detail.html"
-  },
-  {
-    id: "5",
-    image: {url:  "/src/assets/images/p7.jpeg" },
-    discount: "%65",
-    url: "./product-detail.html"
-  }
-];
+let products: ProductType[] = [];
+let offerProducts: ProductType[] = [];
+
+try {
+    const productsResponse = await fetchProducts({}, 10, 0);
+    products = productsResponse.items;
+    offerProducts = products.slice(0, 5).map((product) => ({
+        ...product,
+        discount: "%65",
+        image: { url: "https://via.placeholder.com/400x400.png?text=Product" },
+    }));
+} catch (error) {
+    console.error("Failed to fetch products:", error);
+}
+
 const offer = {
-  title: "شگفت انگیز های منتخب",
-  discount: "تا 65% تخفیف",
-  cta: "مشاهده همه",
-  url: "./shop.html",
-  products: offerProducts
+    title: "شگفت انگیز های منتخب",
+    discount: "تا 65% تخفیف",
+    cta: "مشاهده همه",
+    url: "./shop.html",
+    products: offerProducts,
 };
 ---
 
@@ -55,7 +36,7 @@ const offer = {
     <!-- <Stories /> -->
     <BannerSlider />
     <!-- Special Sale Section -->
-    <ProductsSlider> فروش ویژه </ProductsSlider>
+    <ProductsSlider products={products}> فروش ویژه </ProductsSlider>
 
     <OfferLiteHero offer={offer} />
 
@@ -93,7 +74,7 @@ const offer = {
         </div>
     </section>
     <CategoryHero>خرید داداش خرید</CategoryHero>
-    <ProductsSliderSideBanner />
+    <ProductsSliderSideBanner products={products.slice(0, 6)} />
     <!-- 2 Banner Section -->
     <section class="container py-10">
         <div class="grid grid-cols-1 gap-6 md:grid-cols-2">

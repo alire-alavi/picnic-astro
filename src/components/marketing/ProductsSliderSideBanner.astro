@@ -1,74 +1,11 @@
 ---
 import type { Product } from "../../types/product";
 
-const products: Product[] = [
-  {
-    id: "1",
-    image: { url: "/src/assets/images/p17.jpg", alt: "Blesser" },
-    name: "کفش نایک ایرمکس مشکی رنگین کمانی",
-    price: "1,900,000",
-    discountPrice: "1,000,000",
-    discount: "33%",
-    url: "#",
-    startDate: undefined,
-    expireDate: "2024-12-01T00:00:00",
-  },
-  {
-    id: "2",
-    image: { url: "src/assets/images/p5.webp", alt: "Blesser" },
-    name: "نایک ایرجردن جامپ مَن سفید بنفش",
-    price: "500,000",
-    discountPrice: "400,000",
-    discount: "20%",
-    url: "#",
-    startDate: "2024-05-01T00:00:00",
-    expireDate: "2025-04-01T00:00:00",
-  },
-  {
-    id: "3",
-    image: { url: "/src/assets/images/p24.jpeg", alt: "Blesser" },
-    name: "نایک ایرجردن جامپ مَن سفید بنفش",
-    price: "5,000,000",
-    discountPrice: "4,000,000",
-    discount: "20%",
-    url: "#",
-    startDate: "2024-05-01T00:00:00",
-    expireDate: "2025-05-01T00:00:00",
-  },
-  {
-    id: "4",
-    image: { url: "/src/assets/images/p7.jpeg", alt: "Blesser" },
-    name: "کفش کوهنوردی هامتو کد ۲۲۰۲",
-    price: "2,000,000",
-    discountPrice: "1,120,000",
-    discount: "55%",
-    url: "#",
-    startDate: "2024-05-01T00:00:00",
-    expireDate: "2025-06-01T00:00:00",
-  },
-  {
-    id: "5",
-    image: { url: "/src/assets/images/p6.jpeg", alt: "Blesser" },
-    name: "کفش نایک ایرمکس مشکی قرمز",
-    price: "3,000,000",
-    discountPrice: "2,150,000",
-    discount: "55%",
-    url: "#",
-    startDate: "2024-05-01T00:00:00",
-    expireDate: "2025-06-01T00:00:00",
-  },
-  {
-    id: "6",
-    image: { url: "/src/assets/images/p6.webp", alt: "Blesser" },
-    name: "نایک ایر زوم وین فلو کد ۲۲۶۵",
-    price: "700,000",
-    discountPrice: "610,000",
-    discount: "55%",
-    url: "#",
-    startDate: "2024-05-01T00:00:00",
-    expireDate: "2025-06-01T00:00:00",
-  },
-];
+interface Props {
+  products?: Product[];
+}
+
+const { products = [] } = Astro.props;
 ---
 
 <!-- Incredible Offer Section -->
@@ -125,23 +62,27 @@ const products: Product[] = [
           </div>
         </div>
 
-        {products.map((product) => (
+        {products.map((product) => {
+          const dummyImage = "https://via.placeholder.com/400x400.png?text=Product";
+          return (
           <div class="swiper-slide">
             <a
-              href={product.url}
+              href={`/products/${product.slug}`}
               class="relative block overflow-hidden bg-muted"
             >
               <div class="mb-4 bg-secondary p-2 lg:p-4">
                 <!-- Special Sale Percentage  -->
+                {product.discount && (
                 <div
                   class="absolute right-2 top-0 rounded-b-full bg-warning px-1 py-1.5 text-center text-sm font-medium text-white md:text-base"
                 >
                   {product.discount}
                 </div>
+                )}
                 <!-- Image -->
                 <img
-                  src={product.image.url}
-                  alt={product.image.alt}
+                  src={product.image?.url || dummyImage}
+                  alt={product.image?.alt || product.name}
                   class="aspect-[1/1] rounded-xl object-cover"
                 />
               </div>
@@ -193,7 +134,7 @@ const products: Product[] = [
               </div>
             </a>
           </div>
-        ))}
+        )})}
 
         <!-- Show more -->
         <div class="swiper-slide">
