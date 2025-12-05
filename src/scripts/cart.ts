@@ -1,4 +1,4 @@
-import { getCart, getCartItemCount, getCartTotal, formatPrice, type Cart } from '../lib/cart';
+import { getCart, getCartItemCount, getCartTotal, formatPrice, removeFromCart, type Cart } from '../lib/cart';
 
 let currentCart: Cart | null = null;
 
@@ -40,42 +40,85 @@ const updateCartUI = (cart: Cart | null) => {
                 </div>
             `;
         } else {
-            cartItemsContainer.innerHTML = cart.orderItems.map(item => `
-                <li class="flex gap-x-3 pb-5 pt-8">
-                    <div class="relative min-w-fit">
-                        <button
-                            data-remove-item="${item.id}"
-                            class="absolute -top-2 right-0 rounded-lg border bg-muted duration-200 hover:bg-background p-1"
-                        >
-                            <span class="i-lucide-x h-4 w-4 text-warning"></span>
-                        </button>
-                        <a href="/products/${item.item.slug}">
-                            <img
-                                src="/src/assets/images/product-1.webp"
-                                alt="${item.item.name}"
-                                class="h-20 w-20 rounded-lg object-cover"
-                            />
-                        </a>
-                    </div>
-                    <div class="flex w-full flex-col">
-                        <a href="/products/${item.item.slug}" class="line-clamp-2 h-10">
-                            ${item.item.name}
-                        </a>
-                        <div class="flex items-center justify-between pt-3 text-text/80">
-                            <div class="flex items-center gap-2">
-                                <span class="text-sm">تعداد:</span>
-                                <span class="font-bold">${item.quantity}</span>
-                            </div>
-                            <div class="flex items-center gap-1 text-primary">
-                                <span class="font-bold">${formatPrice(parseFloat(item.price))}</span>
-                                <span class="text-xs">تومان</span>
+            cartItemsContainer.innerHTML = cart.orderItems.map(item => {
+                const thumbnailUrl = item.item.thumbnail?.sm || item.item.thumbnail?.url || '/src/assets/images/product-1.webp';
+                const altText = item.item.thumbnail?.altText || item.item.name;
+
+                return `
+                    <li class="flex gap-x-3 pb-5 pt-8">
+                        <div class="relative min-w-fit">
+                            <button
+                                data-remove-item="${item.item.id}"
+                                class="absolute -top-2 right-0 rounded-lg border bg-muted duration-200 hover:bg-background p-1"
+                            >
+                                <span class="i-lucide-x h-4 w-4 text-warning"></span>
+                            </button>
+                            <a href="/products/${item.item.slug}">
+                                <img
+                                    src="${thumbnailUrl}"
+                                    alt="${altText}"
+                                    class="h-20 w-20 rounded-lg object-cover"
+                                />
+                            </a>
+                        </div>
+                        <div class="flex w-full flex-col">
+                            <a href="/products/${item.item.slug}" class="line-clamp-2 h-10">
+                                ${item.item.name}
+                            </a>
+                            <div class="flex items-center justify-between pt-3 text-text/80">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-sm">تعداد:</span>
+                                    <span class="font-bold">${item.quantity}</span>
+                                </div>
+                                <div class="flex items-center gap-1 text-primary">
+                                    <span class="font-bold">${formatPrice(parseFloat(item.price))}</span>
+                                    <span class="text-xs">تومان</span>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </li>
-            `).join('');
+                    </li>
+                `;
+            }).join('');
+
+            attachRemoveHandlers();
         }
     }
+};
+
+const attachRemoveHandlers = () => {
+    const removeButtons = document.querySelectorAll('[data-remove-item]');
+    removeButtons.forEach(button => {
+        button.addEventListener('click', async (e) => {
+            e.preventDefault();
+            const productId = (button as HTMLElement).getAttribute('data-remove-item');
+            if (!productId) return;
+
+            try {
+                await removeFromCart(productId);
+                await refreshCart();
+                showNotification('محصول از سبد خرید حذف شد', 'success');
+            } catch (error) {
+                console.error('Failed to remove item from cart:', error);
+                showNotification('خطا در حذف محصول از سبد خرید', 'error');
+            }
+        });
+    });
+};
+
+const showNotification = (message: string, type: 'success' | 'error') => {
+    const notification = document.createElement('div');
+    notification.className = `fixed top-20 left-1/2 -translate-x-1/2 z-50 px-6 py-3 rounded-lg shadow-lg ${type === 'success' ? 'bg-success text-white' : 'bg-warning text-white'
+        } transition-all duration-300`;
+    notification.textContent = message;
+
+    document.body.appendChild(notification);
+
+    setTimeout(() => {
+        notification.style.opacity = '0';
+        setTimeout(() => {
+            document.body.removeChild(notification);
+        }, 300);
+    }, 3000);
 };
 
 export const initializeCart = async () => {
