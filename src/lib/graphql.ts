@@ -70,3 +70,38 @@ export const fetchProduct = async (id: string, token?: string): Promise<Product>
 
     return data.product;
 };
+
+export const fetchProductBySlug = async (slug: string, token?: string): Promise<Product> => {
+    const client = createClient(token);
+
+    const query = `
+        query GetProduct($slug: String!) {
+            product(slug: $slug) {
+                id
+                name
+                slug
+                price
+                categoryId
+                seo_title
+                seo_description
+                seo_keywords
+                thumbnail {
+                    id
+                    url
+                    altText
+                }
+                sliderImages {
+                    id
+                    url
+                    altText
+                }
+                createdAt
+                updatedAt
+            }
+        }
+    `;
+
+    const data = await client.request<{ product: Product }>(query, { slug });
+
+    return data.product;
+};

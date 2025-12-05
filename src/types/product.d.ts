@@ -1,6 +1,10 @@
 export type Image = {
+    id?: string,
     url: string,
+    sm?: string,
+    md?: string,
     alt?: string,
+    altText?: string,
 }
 
 export type Product = {
@@ -14,7 +18,8 @@ export type Product = {
     seo_keywords: string,
     createdAt: string,
     updatedAt: string,
-    image?: Image,
+    thumbnail?: Image,
+    sliderImages?: Image[],
     discountPrice?: string,
     discount?: string,
     startDate?: string,
