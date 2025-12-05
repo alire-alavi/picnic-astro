@@ -81,8 +81,8 @@ const { products = [] } = Astro.props;
                 )}
                 <!-- Image -->
                 <img
-                  src={product.image?.url || dummyImage}
-                  alt={product.image?.alt || product.name}
+                  src={product.thumbnail?.url || dummyImage}
+                  alt={product.thumbnail?.alt || product.name}
                   class="aspect-[1/1] rounded-xl object-cover"
                 />
               </div>

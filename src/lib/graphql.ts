@@ -23,6 +23,13 @@ export const fetchProducts = async (
                     name
                     slug
                     price
+                    thumbnail {
+                        id
+                        url
+                        altText
+                        sm
+                        md
+                    }
                     categoryId
                     seo_title
                     seo_description
