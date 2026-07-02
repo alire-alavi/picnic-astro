@@ -24,6 +24,7 @@ export interface CartItem {
 export interface Cart {
   id: string;
   orderStatus: string;
+  shippingMethod?: string;
   createdAt: string;
   updatedAt: string;
   orderItems: CartItem[];
@@ -34,6 +35,7 @@ const GET_CART_QUERY = `
     orders(status: PENDING) {
       id
       orderStatus
+      shippingMethod
       createdAt
       updatedAt
       orderItems {
@@ -183,4 +185,53 @@ export const getCartTotal = (cart: Cart | null): number => {
 
 export const formatPrice = (price: number): string => {
   return new Intl.NumberFormat('fa-IR').format(price);
+};
+
+const UPDATE_ORDER_MUTATION = `
+  mutation UpdateOrder($input: UpdateOrderInput!) {
+    updateOrder(input: $input) {
+      id
+      orderStatus
+      shippingMethod
+      createdAt
+      updatedAt
+      orderItems {
+        id
+        quantity
+        price
+        item {
+          id
+          name
+          slug
+          price
+          seo_title
+          thumbnail {
+            id
+            url
+            altText
+            sm
+            md
+          }
+        }
+      }
+    }
+  }
+`;
+
+export const updateOrderShippingMethod = async (orderId: string, shippingMethod: string): Promise<Cart | null> => {
+  const token = getAccessToken();
+  if (!token) {
+    throw new Error('Authentication required');
+  }
+
+  try {
+    const client = createClient(token);
+    const data = await client.request<{ updateOrder: Cart }>(UPDATE_ORDER_MUTATION, {
+      input: { orderId, shippingMethod }
+    });
+    return data.updateOrder;
+  } catch (error) {
+    console.error('Failed to update shipping method:', error);
+    throw error;
+  }
 };

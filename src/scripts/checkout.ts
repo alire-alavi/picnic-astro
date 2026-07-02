@@ -1,6 +1,182 @@
-import { getCart, addToCart, removeFromCart, getCartItemCount, getCartTotal, formatPrice, type Cart } from '../lib/cart';
+import { getCart, addToCart, removeFromCart, getCartItemCount, getCartTotal, formatPrice, type Cart, updateOrderShippingMethod } from '../lib/cart';
 
 let currentCart: Cart | null = null;
+let selectedAddressId: string | null = null;
+let selectedShippingMethod: string | null = null;
+
+async function loadAddresses() {
+  try {
+    const token = localStorage.getItem('accessToken');
+    if (!token) {
+      window.location.href = '/auth/login';
+      return;
+    }
+
+    const response = await fetch(import.meta.env.PUBLIC_GRAPHQL_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({
+        query: `
+          query GetMyAddresses {
+            myAddresses {
+              id
+              street
+              type
+              city
+              state
+              zipCode
+              country
+            }
+          }
+        `
+      })
+    });
+
+    const { data, errors } = await response.json();
+    
+    if (errors) {
+      console.error('Failed to load addresses:', errors);
+      return;
+    }
+
+    if (data.myAddresses && data.myAddresses.length > 0) {
+      const shippingAddresses = data.myAddresses.filter((addr: any) => addr.type === 'SHIPPING');
+      if (shippingAddresses.length > 0) {
+        selectedAddressId = shippingAddresses[0].id;
+        displayAddress(shippingAddresses[0]);
+      }
+      
+      renderAddressList(data.myAddresses);
+    }
+  } catch (error) {
+    console.error('Error loading addresses:', error);
+  }
+}
+
+function displayAddress(address: any) {
+  const addressDisplay = document.querySelector('[data-address-display]');
+  if (addressDisplay) {
+    addressDisplay.innerHTML = `
+      <div class="mb-4 flex justify-between gap-x-2 sm:mb-2">
+        <div class="line-clamp-1 text-sm text-text/95 xs:text-base">
+          <div class="flex gap-1">
+            <div class="flex min-w-fit">
+              <p>${address.state},</p>
+              <p>${address.city}</p>
+            </div>
+            <p>${address.street}</p>
+          </div>
+          <div class="flex gap-1">
+            <p>کد پستی ${address.zipCode}</p>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+}
+
+function renderAddressList(addresses: any[]) {
+  const addressListContainer = document.querySelector('[data-address-list]');
+  if (!addressListContainer) return;
+
+  addressListContainer.innerHTML = addresses.map(addr => `
+    <div class="relative block rounded-lg border p-4 shadow hover:border-border/50 cursor-pointer ${addr.id === selectedAddressId ? 'border-primary' : ''}" data-address-select="${addr.id}">
+      <div class="mb-4 flex justify-between gap-x-2 sm:mb-2">
+        <div class="line-clamp-1 text-sm text-text/95 xs:text-base">
+          <div class="flex gap-1">
+            <div class="flex min-w-fit">
+              <p>${addr.state},</p>
+              <p>${addr.city}</p>
+            </div>
+            <p>${addr.street}</p>
+          </div>
+          <div class="flex gap-1">
+            <p>کد پستی ${addr.zipCode}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+
+  attachAddressSelectionHandlers();
+}
+
+function attachAddressSelectionHandlers() {
+  const addressElements = document.querySelectorAll('[data-address-select]');
+  addressElements.forEach(el => {
+    el.addEventListener('click', () => {
+      const addressId = el.getAttribute('data-address-select');
+      if (addressId) {
+        selectedAddressId = addressId;
+        
+        addressElements.forEach(e => e.classList.remove('border-primary'));
+        el.classList.add('border-primary');
+      }
+    });
+  });
+}
+
+async function handleShippingMethodChange(orderId: string, method: string) {
+  try {
+    await updateOrderShippingMethod(orderId, method);
+    selectedShippingMethod = method;
+    console.log('Shipping method updated successfully');
+  } catch (error) {
+    console.error('Error updating shipping method:', error);
+    showNotification('خطا در به‌روزرسانی روش ارسال', 'error');
+  }
+}
+
+async function createAddress(formData: any) {
+  try {
+    const token = localStorage.getItem('accessToken');
+    if (!token) {
+      window.location.href = '/auth/login';
+      return null;
+    }
+
+    const response = await fetch(import.meta.env.PUBLIC_GRAPHQL_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({
+        query: `
+          mutation CreateAddress($input: CreateAddressInput!) {
+            createAddress(input: $input) {
+              id
+              street
+              type
+              city
+              state
+              zipCode
+              country
+            }
+          }
+        `,
+        variables: {
+          input: formData
+        }
+      })
+    });
+
+    const { data, errors } = await response.json();
+    
+    if (errors) {
+      console.error('Failed to create address:', errors);
+      return null;
+    }
+
+    return data.createAddress;
+  } catch (error) {
+    console.error('Error creating address:', error);
+    return null;
+  }
+}
 
 const updateCheckoutUI = (cart: Cart | null) => {
     currentCart = cart;
@@ -248,5 +424,46 @@ export const refreshCheckout = async () => {
 if (typeof window !== 'undefined') {
     document.addEventListener('DOMContentLoaded', () => {
         refreshCheckout();
+        loadAddresses();
+
+        const deliveryRadios = document.querySelectorAll('input[name="delivery"]');
+        deliveryRadios.forEach(radio => {
+            radio.addEventListener('change', (e) => {
+                const target = e.target as HTMLInputElement;
+                if (currentCart && target.checked) {
+                    const method = target.value === 'delivery-1' ? 'STANDARD' : 'EXPRESS';
+                    handleShippingMethodChange(currentCart.id, method);
+                }
+            });
+        });
+
+        const addAddressForm = document.querySelector('[data-add-address-form]') as HTMLFormElement;
+        if (addAddressForm) {
+            addAddressForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                const formData = {
+                    street: (addAddressForm.elements.namedItem('street') as HTMLInputElement).value,
+                    city: (addAddressForm.elements.namedItem('city') as HTMLInputElement).value,
+                    state: (addAddressForm.elements.namedItem('state') as HTMLInputElement).value,
+                    zipCode: (addAddressForm.elements.namedItem('zipCode') as HTMLInputElement).value,
+                    country: (addAddressForm.elements.namedItem('country') as HTMLInputElement)?.value || 'ایران',
+                    type: 'SHIPPING'
+                };
+
+                const newAddress = await createAddress(formData);
+                if (newAddress) {
+                    selectedAddressId = newAddress.id;
+                    displayAddress(newAddress);
+                    await loadAddresses();
+                    addAddressForm.reset();
+                    showNotification('آدرس با موفقیت اضافه شد', 'success');
+                } else {
+                    showNotification('خطا در افزودن آدرس', 'error');
+                }
+            });
+        }
     });
 }
+
+export { loadAddresses, handleShippingMethodChange, createAddress, selectedAddressId, selectedShippingMethod };
