@@ -12,7 +12,7 @@ import "../../styles/css/reset.css";
 <Layout>
   <Navbar />
 
-  <main class="flex-grow bg-background mt-16 pt-[106px]">
+  <main class="flex-grow bg-background mt-4 pt-[106px]">
     <div class="container grid grid-cols-12 gap-4 pb-28 pt-10 lg:pb-10">
       <!-- Sidebar -->
       <div class="col-span-12 lg:col-span-3">
@@ -196,7 +196,7 @@ import "../../styles/css/reset.css";
               </div>
               <!-- Populated via API -->
               <div class="space-y-4" data-pending-orders>
-                <div class="flex justify-center py-6" data-pending-orders-empty>
+                <div class="flex justify-center py-6" data-empty>
                   <div
                     class="flex flex-col items-center justify-center gap-y-4 text-text/60"
                   >
@@ -297,10 +297,7 @@ import "../../styles/css/reset.css";
                 >
                   <div class="space-y-4" data-orders-all>
                     <!-- Empty state -->
-                    <div
-                      class="flex justify-center py-10"
-                      data-orders-all-empty
-                    >
+                    <div class="flex justify-center py-10" data-empty>
                       <div
                         class="flex flex-col items-center justify-center gap-y-4 text-text/60"
                       >
@@ -322,10 +319,7 @@ import "../../styles/css/reset.css";
                   aria-labelledby="filter-current-tab"
                 >
                   <div class="space-y-4" data-orders-current>
-                    <div
-                      class="flex justify-center py-10"
-                      data-orders-current-empty
-                    >
+                    <div class="flex justify-center py-10" data-empty>
                       <div
                         class="flex flex-col items-center justify-center gap-y-4 text-text/60"
                       >
@@ -347,10 +341,7 @@ import "../../styles/css/reset.css";
                   aria-labelledby="filter-delivered-tab"
                 >
                   <div class="space-y-4" data-orders-delivered>
-                    <div
-                      class="flex justify-center py-10"
-                      data-orders-delivered-empty
-                    >
+                    <div class="flex justify-center py-10" data-empty>
                       <div
                         class="flex flex-col items-center justify-center gap-y-4 text-text/60"
                       >
@@ -372,10 +363,7 @@ import "../../styles/css/reset.css";
                   aria-labelledby="filter-canceled-tab"
                 >
                   <div class="space-y-4" data-orders-canceled>
-                    <div
-                      class="flex justify-center py-10"
-                      data-orders-canceled-empty
-                    >
+                    <div class="flex justify-center py-10" data-empty>
                       <div
                         class="flex flex-col items-center justify-center gap-y-4 text-text/60"
                       >
@@ -546,6 +534,93 @@ import "../../styles/css/reset.css";
 
 <script>
   import { getCurrentUser, getAccessToken } from "../../lib/auth";
+  import {
+    getOrders,
+    getOrderTotal,
+    getOrderItemCount,
+    getOrderStatusLabel,
+    type Order,
+  } from "../../lib/orders";
+  import { formatPrice } from "../../lib/cart";
+
+  // Status groupings for the filter tabs.
+  const CURRENT_STATUSES = [
+    "SUBMITTED",
+    "PAYMENT_REQUIRED",
+    "PRODUCTION",
+    "PRODUCTION_COMPLETE",
+    "PROCESSING",
+    "SHIPPING",
+  ];
+
+  function statusBadgeClass(status: string): string {
+    if (status === "COMPLETED") return "bg-success/10 text-success";
+    if (status === "CANCELLED") return "bg-warning/10 text-warning";
+    if (status === "PAYMENT_REQUIRED") return "bg-primary/10 text-primary";
+    return "bg-text/10 text-text/80";
+  }
+
+  function formatDate(iso: string): string {
+    const date = new Date(iso);
+    if (isNaN(date.getTime())) return "";
+    return new Intl.DateTimeFormat("fa-IR", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    }).format(date);
+  }
+
+  function orderCard(order: Order): string {
+    const total = getOrderTotal(order);
+    const count = getOrderItemCount(order);
+    const thumbs = order.orderItems
+      .slice(0, 4)
+      .map((oi) => {
+        const src = oi.item.thumbnail?.sm || oi.item.thumbnail?.url || "";
+        return src
+          ? `<img src="${src}" alt="${oi.item.thumbnail?.altText || oi.item.name}" class="size-14 rounded-lg border object-cover" loading="lazy" />`
+          : `<div class="flex size-14 items-center justify-center rounded-lg border text-text/40"><div class="i-lucide-image size-6"></div></div>`;
+      })
+      .join("");
+
+    return `
+      <div class="rounded-lg border p-4">
+        <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
+          <div class="flex items-center gap-3">
+            <span class="rounded-full px-3 py-1 text-sm ${statusBadgeClass(order.orderStatus)}">
+              ${getOrderStatusLabel(order.orderStatus)}
+            </span>
+            <span class="text-sm text-text/60">${formatDate(order.createdAt)}</span>
+          </div>
+          <span class="text-sm text-text/60">شماره سفارش: ${order.id}</span>
+        </div>
+        <div class="flex flex-wrap items-center justify-between gap-4">
+          <div class="flex flex-wrap items-center gap-2">${thumbs}</div>
+          <div class="flex flex-col items-start gap-1 sm:items-end">
+            <span class="text-sm text-text/60">${count} کالا</span>
+            <span class="font-medium">${formatPrice(total)} تومان</span>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  function renderInto(selector: string, orders: Order[]) {
+    const container = document.querySelector<HTMLElement>(selector);
+    if (!container) return;
+    const empty = container.querySelector<HTMLElement>("[data-empty]");
+    if (orders.length === 0) {
+      if (empty) empty.classList.remove("hidden");
+      return;
+    }
+    if (empty) empty.classList.add("hidden");
+    container.insertAdjacentHTML("beforeend", orders.map(orderCard).join(""));
+  }
+
+  function setCount(selector: string, value: number) {
+    const el = document.querySelector<HTMLElement>(selector);
+    if (el) el.textContent = `(${value})`;
+  }
 
   async function init() {
     const token = getAccessToken();
@@ -580,6 +655,32 @@ import "../../styles/css/reset.css";
 
     const phoneEl = document.querySelector<HTMLElement>("[data-user-phone]");
     if (phoneEl) phoneEl.textContent = user.phoneNumber || "";
+
+    // Fetch all orders, then bucket them for the sections and tabs. PENDING
+    // orders are the cart, so they are excluded from the order history.
+    const allOrders = (await getOrders()).filter(
+      (o) => o.orderStatus !== "PENDING",
+    );
+
+    const pending = allOrders.filter(
+      (o) => o.orderStatus === "PAYMENT_REQUIRED",
+    );
+    const current = allOrders.filter((o) =>
+      CURRENT_STATUSES.includes(o.orderStatus),
+    );
+    const delivered = allOrders.filter((o) => o.orderStatus === "COMPLETED");
+    const canceled = allOrders.filter((o) => o.orderStatus === "CANCELLED");
+
+    renderInto("[data-pending-orders]", pending);
+    renderInto("[data-orders-all]", allOrders);
+    renderInto("[data-orders-current]", current);
+    renderInto("[data-orders-delivered]", delivered);
+    renderInto("[data-orders-canceled]", canceled);
+
+    setCount("[data-tab-count-all]", allOrders.length);
+    setCount("[data-tab-count-current]", current.length);
+    setCount("[data-tab-count-delivered]", delivered.length);
+    setCount("[data-tab-count-canceled]", canceled.length);
   }
 
   document.addEventListener("DOMContentLoaded", init);

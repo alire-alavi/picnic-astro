@@ -12,7 +12,7 @@ import "../../styles/css/reset.css";
 <Layout>
   <Navbar />
 
-  <main class="flex-grow bg-background mt-16 pt-[106px]">
+  <main class="flex-grow bg-background mt-4 pt-[106px]">
     <div class="container grid grid-cols-12 gap-4 pb-28 pt-10 lg:pb-10">
       <!-- Sidebar -->
       <div class="col-span-12 lg:col-span-3">
@@ -514,8 +514,13 @@ import "../../styles/css/reset.css";
             </div>
           </div>
         </div>
+        <p id="nameApiError" class="hidden text-sm text-warning"></p>
+        <p id="nameApiSuccess" class="hidden text-sm text-success">
+          نام با موفقیت تغییر یافت
+        </p>
         <div class="flex justify-end gap-4">
           <button
+            id="updateNameBtn"
             type="button"
             class="btn-primary w-full rounded-lg px-4 py-2 md:w-auto"
           >
@@ -626,8 +631,13 @@ import "../../styles/css/reset.css";
             </label>
           </div>
         </div>
+        <p id="emailApiError" class="hidden text-sm text-warning"></p>
+        <p id="emailApiSuccess" class="hidden text-sm text-success">
+          ایمیل با موفقیت تغییر یافت
+        </p>
         <div class="flex justify-end gap-4">
           <button
+            id="updateEmailBtn"
             type="button"
             class="btn-primary w-full rounded-lg px-4 py-2 md:w-auto"
           >
@@ -795,6 +805,16 @@ import "../../styles/css/reset.css";
     }
   `;
 
+  const UPDATE_USER_MUTATION = `
+    mutation UpdateUser($input: UpdateUserInput!) {
+      updateUser(input: $input) {
+        id
+        email
+        name
+      }
+    }
+  `;
+
   function passwordHasLowercase(p: string) {
     return /[a-z]/.test(p);
   }
@@ -897,6 +917,122 @@ import "../../styles/css/reset.css";
     // Mobile sidebar phone
     const phoneEl = document.querySelector<HTMLElement>("[data-user-phone]");
     if (phoneEl) phoneEl.textContent = user.phoneNumber || "";
+
+    // Prefill name modal (split full name into first / rest) and email modal.
+    const firstEl = document.getElementById(
+      "fullname-first",
+    ) as HTMLInputElement | null;
+    const lastEl = document.getElementById(
+      "fullname-last",
+    ) as HTMLInputElement | null;
+    if (firstEl && lastEl && user.name) {
+      const parts = user.name.trim().split(/\s+/);
+      firstEl.value = parts.shift() || "";
+      lastEl.value = parts.join(" ");
+    }
+
+    const emailInputEl = document.getElementById(
+      "email",
+    ) as HTMLInputElement | null;
+    if (emailInputEl) emailInputEl.value = user.email || "";
+
+    // Wiring: update name via updateUser
+    const nameBtn = document.getElementById("updateNameBtn");
+    if (nameBtn && firstEl && lastEl) {
+      nameBtn.addEventListener("click", async () => {
+        const errEl = document.getElementById("nameApiError")!;
+        const successEl = document.getElementById("nameApiSuccess")!;
+        errEl.classList.add("hidden");
+        successEl.classList.add("hidden");
+
+        const name = [firstEl.value.trim(), lastEl.value.trim()]
+          .filter(Boolean)
+          .join(" ")
+          .trim();
+        if (!name) {
+          errEl.textContent = "لطفا نام را وارد کنید";
+          errEl.classList.remove("hidden");
+          return;
+        }
+
+        nameBtn.setAttribute("disabled", "true");
+        nameBtn.textContent = "در حال ارسال...";
+        try {
+          const client = createClient(token);
+          const data = await client.request<{ updateUser: { name: string } }>(
+            UPDATE_USER_MUTATION,
+            { input: { name } },
+          );
+          const updatedName = data.updateUser.name || name;
+          document
+            .querySelectorAll<HTMLElement>("[data-display-name]")
+            .forEach((el) => {
+              el.textContent = updatedName;
+            });
+          document
+            .querySelectorAll<HTMLElement>(
+              "[data-user-name], [data-user-name-mobile]",
+            )
+            .forEach((el) => {
+              el.textContent = updatedName;
+            });
+          successEl.classList.remove("hidden");
+        } catch (err: unknown) {
+          errEl.textContent =
+            err instanceof Error
+              ? err.message
+              : "خطا در ارتباط با سرور. لطفا دوباره تلاش کنید";
+          errEl.classList.remove("hidden");
+        } finally {
+          nameBtn.removeAttribute("disabled");
+          nameBtn.textContent = "ویرایش";
+        }
+      });
+    }
+
+    // Wiring: update email via updateUser
+    const emailBtn = document.getElementById("updateEmailBtn");
+    if (emailBtn && emailInputEl) {
+      emailBtn.addEventListener("click", async () => {
+        const errEl = document.getElementById("emailApiError")!;
+        const successEl = document.getElementById("emailApiSuccess")!;
+        errEl.classList.add("hidden");
+        successEl.classList.add("hidden");
+
+        const email = emailInputEl.value.trim();
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+          errEl.textContent = "لطفا یک ایمیل معتبر وارد کنید";
+          errEl.classList.remove("hidden");
+          return;
+        }
+
+        emailBtn.setAttribute("disabled", "true");
+        emailBtn.textContent = "در حال ارسال...";
+        try {
+          const client = createClient(token);
+          const data = await client.request<{ updateUser: { email: string } }>(
+            UPDATE_USER_MUTATION,
+            { input: { email } },
+          );
+          const updatedEmail = data.updateUser.email || email;
+          document
+            .querySelectorAll<HTMLElement>("[data-display-email]")
+            .forEach((el) => {
+              el.textContent = updatedEmail;
+            });
+          successEl.classList.remove("hidden");
+        } catch (err: unknown) {
+          errEl.textContent =
+            err instanceof Error
+              ? err.message
+              : "خطا در ارتباط با سرور. لطفا دوباره تلاش کنید";
+          errEl.classList.remove("hidden");
+        } finally {
+          emailBtn.removeAttribute("disabled");
+          emailBtn.textContent = "ویرایش";
+        }
+      });
+    }
 
     // Wiring: new password strength
     const newPasswordEl = document.getElementById(

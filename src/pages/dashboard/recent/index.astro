@@ -12,7 +12,7 @@ import "../../../styles/css/reset.css";
 <Layout>
   <Navbar />
 
-  <main class="flex-grow bg-background mt-16 pt-[106px]">
+  <main class="flex-grow bg-background mt-4 pt-[106px]">
     <div class="container grid grid-cols-12 gap-4 pb-28 pt-10 lg:pb-10">
       <!-- Sidebar -->
       <div class="col-span-12 lg:col-span-3">
@@ -184,11 +184,16 @@ import "../../../styles/css/reset.css";
                   class="absolute right-0 top-10 h-[3px] w-full animate-fill-border rounded-full bg-primary"
                 ></span>
               </h1>
-              <button class="btn-warning px-4 py-1.5" data-clear-recent-btn>حذف همه</button>
+              <button class="btn-warning px-4 py-1.5" data-clear-recent-btn
+                >حذف همه</button
+              >
             </div>
 
             <!-- Recent products grid — populated via API -->
-            <div class="grid gap-2 xs:grid-cols-2 md:grid-cols-3" data-recent-items>
+            <div
+              class="grid gap-2 xs:grid-cols-2 md:grid-cols-3"
+              data-recent-items
+            >
               <!-- Empty state -->
               <div
                 class="col-span-full flex justify-center py-10"
