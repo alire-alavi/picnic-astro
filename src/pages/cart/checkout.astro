@@ -2,6 +2,7 @@
 import Layout from "../../layouts/Layout.astro";
 import Navbar from "../../components/Navbar.astro";
 import { getCart } from "../../lib/cart";
+import { getAddresses } from "../../lib/address";
 import type { Product } from "../../types/product.d";
 import "../../styles/css/global.css";
 import "../../styles/css/dependencies/swiper.min.css";
@@ -12,13 +13,27 @@ import "../../styles/css/dependencies/nouislider.min.css";
 import "../../styles/css/reset.css";
 
 const cart = await getCart();
+const addresses = await getAddresses().catch(() => []);
+const shippingAddresses = addresses.filter(addr => addr.type === 'SHIPPING');
+const defaultAddress = shippingAddresses[0] || null;
+
 const itemCount =
     cart?.orderItems.reduce((sum, item) => sum + item.quantity, 0) || 0;
+
+const subtotal = cart?.orderItems.reduce((sum, item) => 
+    sum + (parseFloat(item.price) * item.quantity), 0) || 0;
+const discount = 0;
+const shippingCost = 60000;
+const total = subtotal - discount + shippingCost;
+
+const formatPrice = (price: number) => {
+    return new Intl.NumberFormat('fa-IR').format(price);
+};
 ---
 
 <Layout>
     <Navbar />
-    <main class="flex-grow bg-background pt-[106px]">
+    <main class="flex-grow bg-background pt-[106px]" data-order-id={cart?.id}>
         <div class="container pb-28 pt-6 lg:pb-10">
             <!--  Breadcrumb -->
             <div class="mb-2 rounded-lg bg-muted shadow lg:mb-6">
@@ -88,7 +103,8 @@ const itemCount =
                                     </button>
                                 </div>
                             </div>
-                            <div class="mb-6">
+                            <div class="mb-6" data-address-display>
+                                {defaultAddress ? (
                                 <div
                                     class="relative block rounded-lg border p-4 shadow hover:border-border/50"
                                 >
@@ -100,14 +116,13 @@ const itemCount =
                                         >
                                             <div class="flex gap-1">
                                                 <div class="flex min-w-fit">
-                                                    <p>تهران,</p>
-                                                    <p>تهران</p>
+                                                    <p>{defaultAddress.state},</p>
+                                                    <p>{defaultAddress.city}</p>
                                                 </div>
-                                                <p>سعادت آباد</p>
+                                                <p>{defaultAddress.street}</p>
                                             </div>
                                             <div class="flex gap-1">
-                                                <p>پلاک 2</p>
-                                                <p>- کد پستی 123456789</p>
+                                                <p>کد پستی {defaultAddress.zipCode}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -117,7 +132,7 @@ const itemCount =
                                         <p
                                             class="line-clamp-1 text-sm text-text/60"
                                         >
-                                            تایماز اکبری
+                                            {defaultAddress.country}
                                         </p>
                                         <div class="flex justify-end">
                                             <button
@@ -135,6 +150,11 @@ const itemCount =
                                         </div>
                                     </div>
                                 </div>
+                                ) : (
+                                <div class="text-center py-4 text-text/60">
+                                    <p>آدرسی ثبت نشده است. لطفا آدرس جدید اضافه کنید.</p>
+                                </div>
+                                )}
                             </div>
                         </div>
                         <div>
@@ -160,6 +180,7 @@ const itemCount =
                                         value="delivery-1"
                                         id="delivery-1"
                                         class="peer hidden"
+                                        checked={cart?.shippingMethod === 'STANDARD'}
                                     />
 
                                     <label
@@ -172,17 +193,17 @@ const itemCount =
                                             <p
                                                 class="line-clamp-1 text-sm text-text/90 xs:text-base"
                                             >
-                                                تیپاکس
+                                                تیپاکس - ارسال عادی
                                             </p>
                                             <img
-                                                src="./assets/images/tipax.avif"
-                                                alt=""
+                                                src="/src/assets/images/tipax.avif"
+                                                alt="tipax"
                                                 class="w-25"
                                             />
                                         </div>
 
                                         <div class="mb-1 text-primary">
-                                            <span>60,000</span>
+                                            <span>{formatPrice(shippingCost)}</span>
                                             <span class="text-sm">تومان</span>
                                         </div>
 
@@ -199,6 +220,7 @@ const itemCount =
                                         value="delivery-2"
                                         id="delivery-2"
                                         class="peer hidden"
+                                        checked={cart?.shippingMethod === 'EXPRESS'}
                                     />
 
                                     <label
@@ -211,10 +233,10 @@ const itemCount =
                                             <p
                                                 class="line-clamp-1 text-sm text-text/90 xs:text-base"
                                             >
-                                                تیپاکس
+                                                تیپاکس - ارسال سریع
                                             </p>
                                             <img
-                                                src="./assets/images/tipax.avif"
+                                                src="/src/assets/images/tipax.avif"
                                                 alt="tipax"
                                                 class="w-25"
                                             />
@@ -238,12 +260,12 @@ const itemCount =
                                 class="flex items-center justify-between gap-x-2 py-6"
                             >
                                 <div class="text-sm text-text/95 lg:text-base">
-                                    قیمت کالا ها (3)
+                                    قیمت کالا ها ({itemCount})
                                 </div>
                                 <div
                                     class="flex items-center gap-1 text-sm lg:text-base"
                                 >
-                                    <div class="font-bold">6,800,000</div>
+                                    <div class="font-bold">{formatPrice(subtotal)}</div>
                                     <div class="text-xs lg:text-sm">تومان</div>
                                 </div>
                             </div>
@@ -256,7 +278,7 @@ const itemCount =
                                 <div
                                     class="flex items-center gap-1 text-sm font-medium text-warning lg:text-base"
                                 >
-                                    <div class="font-bold">500,000</div>
+                                    <div class="font-bold">{formatPrice(discount)}</div>
                                     <div class="text-xs lg:text-sm">تومان</div>
                                 </div>
                             </div>
@@ -269,7 +291,7 @@ const itemCount =
                                 <div
                                     class="flex items-center gap-1 text-sm lg:text-base"
                                 >
-                                    <div class="font-bold">32,000</div>
+                                    <div class="font-bold">{formatPrice(shippingCost)}</div>
                                     <div class="text-xs lg:text-sm">تومان</div>
                                 </div>
                             </div>
@@ -283,14 +305,14 @@ const itemCount =
                                 <div
                                     class="flex items-center gap-1 text-sm text-primary lg:text-base"
                                 >
-                                    <div class="font-bold">6,300,000</div>
+                                    <div class="font-bold">{formatPrice(total)}</div>
                                     <div class="text-xs lg:text-sm">تومان</div>
                                 </div>
                             </div>
                         </div>
                         <div>
                             <a
-                                href="./checkout-payment.html"
+                                href="/cart/payment"
                                 class="inline-flex h-11 w-full items-center justify-center gap-x-2 whitespace-nowrap rounded-md bg-primary-btn px-8 text-sm font-medium text-white ring-offset-background transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
                             >
                                 ادامه فرایند خرید
@@ -303,10 +325,10 @@ const itemCount =
                     >
                         <div>
                             <a
-                                href="./checkout-payment.html"
+                                href="/cart/payment"
                                 class="inline-flex h-10 w-full items-center justify-center gap-x-2 whitespace-nowrap rounded-md bg-primary-btn px-4 py-2 text-sm font-medium text-white ring-offset-background transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
                             >
-                                ادامه | 6,300,000
+                                ادامه | {formatPrice(total)}
                                 <span class="text-xs"> تومان </span>
                             </a>
                         </div>
@@ -315,4 +337,109 @@ const itemCount =
             </div>
         </div>
     </main>
+
+    <!-- Address Selection Modal -->
+    <div id="address-select-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50">
+        <div class="relative w-full max-w-2xl mx-4 bg-muted rounded-lg shadow-xl p-6">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-semibold">انتخاب آدرس</h3>
+                <button type="button" data-modal-close class="text-text/60 hover:text-text">
+                    <div class="i-lucide-x size-6"></div>
+                </button>
+            </div>
+            <div data-address-list class="space-y-2 max-h-96 overflow-y-auto">
+                {shippingAddresses.map(addr => (
+                    <div class="relative block rounded-lg border p-4 shadow hover:border-border/50 cursor-pointer" data-address-select={addr.id}>
+                        <div class="mb-2">
+                            <div class="text-sm text-text/95">
+                                <div class="flex gap-1">
+                                    <p>{addr.state}, {addr.city}</p>
+                                </div>
+                                <p>{addr.street}</p>
+                                <p>کد پستی: {addr.zipCode}</p>
+                            </div>
+                        </div>
+                    </div>
+                ))}
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Address Modal -->
+    <div id="address-add-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50">
+        <div class="relative w-full max-w-2xl mx-4 bg-muted rounded-lg shadow-xl p-6">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-semibold">افزودن آدرس جدید</h3>
+                <button type="button" data-modal-close class="text-text/60 hover:text-text">
+                    <div class="i-lucide-x size-6"></div>
+                </button>
+            </div>
+            <form data-add-address-form class="space-y-4">
+                <div>
+                    <label for="state" class="block text-sm mb-2">استان</label>
+                    <input type="text" id="state" name="state" required class="w-full px-4 py-2 rounded-lg border bg-background" />
+                </div>
+                <div>
+                    <label for="city" class="block text-sm mb-2">شهر</label>
+                    <input type="text" id="city" name="city" required class="w-full px-4 py-2 rounded-lg border bg-background" />
+                </div>
+                <div>
+                    <label for="street" class="block text-sm mb-2">آدرس</label>
+                    <textarea id="street" name="street" required class="w-full px-4 py-2 rounded-lg border bg-background" rows="3"></textarea>
+                </div>
+                <div>
+                    <label for="zipCode" class="block text-sm mb-2">کد پستی</label>
+                    <input type="text" id="zipCode" name="zipCode" required class="w-full px-4 py-2 rounded-lg border bg-background" />
+                </div>
+                <div class="flex gap-2 justify-end">
+                    <button type="button" data-modal-close class="px-4 py-2 rounded-lg border hover:bg-background">
+                        انصراف
+                    </button>
+                    <button type="submit" class="px-4 py-2 rounded-lg bg-primary text-white hover:bg-primary/90">
+                        ذخیره
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
 </Layout>
+
+<script>
+    import '../../scripts/checkout';
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const modalTriggers = document.querySelectorAll('[data-modal-target]');
+        const modalCloses = document.querySelectorAll('[data-modal-close]');
+
+        modalTriggers.forEach(trigger => {
+            trigger.addEventListener('click', () => {
+                const modalId = trigger.getAttribute('data-modal-target');
+                if (!modalId) return;
+                const modal = document.getElementById(modalId);
+                if (modal) {
+                    modal.classList.remove('hidden');
+                    modal.classList.add('flex');
+                }
+            });
+        });
+
+        modalCloses.forEach(close => {
+            close.addEventListener('click', () => {
+                const modal = close.closest('[id$="-modal"]');
+                if (modal) {
+                    modal.classList.add('hidden');
+                    modal.classList.remove('flex');
+                }
+            });
+        });
+
+        document.querySelectorAll('[id$="-modal"]').forEach(modal => {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.classList.add('hidden');
+                    modal.classList.remove('flex');
+                }
+            });
+        });
+    });
+</script>
