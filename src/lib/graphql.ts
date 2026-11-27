@@ -1,5 +1,6 @@
 import { GraphQLClient } from 'graphql-request';
 import type { Product, ProductsResponse, ProductsFilterInput } from '../types/product';
+import type { Category } from '../types/category';
 
 export const createClient = (token?: string) => {
     return new GraphQLClient(import.meta.env.PUBLIC_GRAPHQL_URL, {
@@ -111,4 +112,27 @@ export const fetchProductBySlug = async (slug: string, token?: string): Promise<
     const data = await client.request<{ product: Product }>(query, { slug });
 
     return data.product;
+};
+
+export const fetchCategories = async (token?: string): Promise<Category[]> => {
+    const client = createClient(token);
+
+    const query = `
+        query GetCategories {
+            categories {
+                id
+                name
+                slug
+                image {
+                    id
+                    url
+                    altText
+                }
+            }
+        }
+    `;
+
+    const data = await client.request<{ categories: Category[] }>(query);
+
+    return data.categories;
 };
