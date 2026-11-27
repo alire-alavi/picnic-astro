@@ -1,0 +1,105 @@
+---
+import AddToCartButton from "./AddToCartButton.astro";
+import type { CatalogPrice, ProductDetail } from "../../types/product";
+
+interface Props {
+    product: ProductDetail;
+}
+
+const { product } = Astro.props;
+const { sellingModes, deliveryConditions } = product.catalog;
+const retail = sellingModes.find(({ mode }) => mode === "RETAIL");
+const retailVariant = retail?.variants[0];
+const legacyCartAvailable =
+    retail?.purchasePolicy === "INSTANT" &&
+    retail.variants.length === 1 &&
+    retailVariant?.available &&
+    retailVariant.prices.length === 1 &&
+    retailVariant.prices[0].currencyCode === "IRT" &&
+    retailVariant.prices[0].amount === product.price;
+
+const numberFormat = new Intl.NumberFormat("fa-IR");
+const priceFormat = new Intl.NumberFormat("fa-IR", { maximumFractionDigits: 30 });
+const unitPriceFormat = new Intl.NumberFormat("fa-IR", { maximumFractionDigits: 6 });
+const currencyLabel = (price: CatalogPrice) =>
+    price.currencyCode === "IRT" ? price.currencySymbol : price.currencyCode;
+---
+
+<section class="space-y-4" aria-labelledby="catalog-title">
+    <h2 id="catalog-title" class="text-lg font-medium">گزینه‌های خرید</h2>
+    {sellingModes.length === 0 && <p class="text-sm text-text/60">گزینه‌ای برای فروش ثبت نشده است.</p>}
+
+    {sellingModes.map(({ mode, purchasePolicy, minimumPacks, variants }) => (
+        <section class="space-y-3 rounded-lg border border-border p-3" aria-labelledby={`catalog-${mode}`}>
+            <div>
+                <h3 id={`catalog-${mode}`} class="font-medium">
+                    {mode === "RETAIL" ? "خرده‌فروشی" : "عمده‌فروشی"}
+                </h3>
+                <p class="text-sm text-text/80">
+                    {purchasePolicy === "INSTANT" ? "خرید فوری" : "نیازمند تأیید تیم فروش"}
+                </p>
+                {mode === "WHOLESALE" && (
+                    <p class="text-sm text-text/80">
+                        {minimumPacks === null
+                            ? "حداقل سفارش هنوز تعیین نشده است."
+                            : `حداقل سفارش هر گزینه ${numberFormat.format(minimumPacks)} بسته`}
+                    </p>
+                )}
+            </div>
+            <ul class="space-y-2">
+                {variants.map((variant) => (
+                    <li class="space-y-2 rounded-lg bg-background p-3 text-sm">
+                        <h4 class="font-medium">{variant.name}</h4>
+                        <p class={variant.available ? "text-success" : "text-text/60"}>
+                            {variant.available ? "قابل سفارش" : "در حال حاضر قابل سفارش نیست"}
+                        </p>
+                        {variant.packContents.length > 0 && (
+                            <ul class="list-inside list-disc text-text/80" aria-label="محتویات بسته">
+                                {variant.packContents.map(({ name, quantity }) => (
+                                    <li>{numberFormat.format(quantity)} × {name}</li>
+                                ))}
+                            </ul>
+                        )}
+                        {variant.prices.length > 0 ? (
+                            <ul class="space-y-1">
+                                {variant.prices.map((price) => (
+                                    <li>
+                                        <div class="font-medium text-primary">
+                                            {priceFormat.format(price.amount)}{" "}
+                                            <bdi>{currencyLabel(price)}</bdi>
+                                            {mode === "WHOLESALE" && " برای هر بسته"}
+                                        </div>
+                                        {mode === "WHOLESALE" && (
+                                            <div class="text-text/80">
+                                                {unitPriceFormat.format(price.amountPerItem)}{" "}
+                                                <bdi>{currencyLabel(price)}</bdi> برای هر واحد
+                                            </div>
+                                        )}
+                                    </li>
+                                ))}
+                            </ul>
+                        ) : <p class="text-text/60">قیمت ثبت نشده است.</p>}
+                    </li>
+                ))}
+            </ul>
+        </section>
+    ))}
+
+    <div class="flex gap-2 text-sm text-text/80">
+        <i class="i-lucide-truck size-5 shrink-0 text-primary" aria-hidden="true"></i>
+        <div>
+            {!deliveryConditions.shippingIncludedInPrice && <p>هزینهٔ ارسال جداست.</p>}
+            {deliveryConditions.destinationRequiredForQuote && (
+                <p>برآورد هزینه و زمان ارسال به مقصد سفارش بستگی دارد.</p>
+            )}
+        </div>
+    </div>
+
+    {legacyCartAvailable && (
+        <AddToCartButton
+            productId={product.id}
+            productName={product.name}
+            productPrice={product.price}
+        />
+    )}
+</section>

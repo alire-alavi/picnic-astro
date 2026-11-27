@@ -1,8 +1,8 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import Navbar from "../../components/Navbar.astro";
-import { fetchProducts, fetchProductBySlug } from "../../lib/graphql";
-import AddToCartButton from "../../components/products/AddToCartButton.astro";
+import { fetchAllProducts, fetchProducts, fetchProductBySlug } from "../../lib/graphql";
+import ProductCatalog from "../../components/products/ProductCatalog.astro";
 import ProductsSlider from "../../components/products/ProductsSlider.astro";
 import type { Product } from "../../types/product.d";
 import "../../styles/css/global.css";
@@ -15,8 +15,8 @@ import "../../styles/css/reset.css";
 
 export async function getStaticPaths() {
     try {
-        const productsResponse = await fetchProducts({}, 100, 0);
-        return productsResponse.items.map((product) => ({
+        const products = await fetchAllProducts();
+        return products.map((product) => ({
             params: { slug: product.slug },
         }));
     } catch (error) {
@@ -28,10 +28,6 @@ export async function getStaticPaths() {
 const { slug } = Astro.params;
 const product = await fetchProductBySlug(slug!);
 const dummyImage = "https://via.placeholder.com/600x600.png?text=Product+Image";
-
-const formattedPrice = new Intl.NumberFormat("fa-IR").format(
-    parseFloat(product.price),
-);
 
 let relatedProducts: Product[] = [];
 try {
@@ -170,12 +166,6 @@ try {
                         <div
                             class="flex w-full items-center gap-2 rounded-lg border px-2 py-4 text-sm text-text/60"
                         >
-                            <i class="i-lucide-truck size-6 text-primary"></i>
-                            <span>ارسال رایگان</span>
-                        </div>
-                        <div
-                            class="flex w-full items-center gap-2 rounded-lg border px-2 py-4 text-sm text-text/60"
-                        >
                             <i class="i-lucide-rotate-ccw size-6 text-primary"
                             ></i>
                             <span>7 روز ضمانت بازگشت</span>
@@ -190,60 +180,8 @@ try {
                     </div>
                 </div>
 
-                <!-- Desktop Add to Cart -->
-                <div
-                    class="sticky top-36 col-span-3 hidden h-fit rounded-lg bg-muted px-4 py-6 shadow-md lg:block"
-                >
-                    <div class="mb-6 flex justify-between">
-                        <div class="text-sm text-text/60">فروشنده</div>
-                        <div class="flex items-center gap-x-1">
-                            <span class="text-sm font-medium">بلسر</span>
-                        </div>
-                    </div>
-
-                    <div class="mb-6 space-y-4">
-                        <div class="flex items-center justify-between">
-                            <span class="text-text/60">قیمت:</span>
-                            <div class="flex items-baseline gap-1">
-                                <span class="text-2xl font-bold text-primary"
-                                    >{formattedPrice}</span
-                                >
-                                <span class="text-sm text-text/60">تومان</span>
-                            </div>
-                        </div>
-
-                        <div class="flex items-center gap-2 text-sm">
-                            <i class="i-lucide-check-circle size-5 text-success"
-                            ></i>
-                            <span class="text-success">موجود در انبار</span>
-                        </div>
-                    </div>
-
-                    <AddToCartButton
-                        productId={product.id}
-                        productName={product.name}
-                        productPrice={product.price}
-                    />
-                </div>
-
-                <!-- Mobile Add to Cart -->
-                <div
-                    data-onscrollclass="translate-y-1/2"
-                    class="fixed inset-x-0 bottom-0 z-20 rounded-t-xl bg-muted px-4 pb-20 pt-4 transition-all duration-300 lg:hidden"
-                >
-                    <div class="mb-2 flex items-center justify-between">
-                        <div class="flex items-baseline gap-1">
-                            <span class="text-xl font-bold text-primary"
-                                >{formattedPrice}</span
-                            >
-                            <span class="text-sm text-text/60">تومان</span>
-                        </div>
-                    </div>
-                    <AddToCartButton
-                        productId={product.id}
-                        productName={product.name}
-                        productPrice={product.price}
-                    />
+                <div class="col-span-12 h-fit rounded-lg bg-muted px-4 py-6 shadow-md lg:col-span-3">
+                    <ProductCatalog product={product} />
                 </div>
             </div>
 

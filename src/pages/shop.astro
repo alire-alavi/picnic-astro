@@ -1,0 +1,75 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Navbar from "../components/Navbar.astro";
+import ProductCard from "../components/products/Product.astro";
+import { fetchAllProducts, fetchCategories } from "../lib/graphql";
+import "../styles/css/global.css";
+import "../styles/css/dependencies/swiper.min.css";
+import "../styles/css/fonts.css";
+import "../styles/css/app.css";
+import "../styles/css/base.css";
+import "../styles/css/reset.css";
+
+const [products, categories] = await Promise.all([fetchAllProducts(), fetchCategories()]);
+const categorySlugs = new Map(categories.map(({ id, slug }) => [id, slug]));
+---
+
+<Layout>
+    <Navbar />
+    <main class="flex-grow bg-background pb-24 pt-[106px]">
+        <section class="container space-y-6 pt-10">
+            <h1 class="text-xl font-bold lg:text-2xl">محصولات</h1>
+            <div class="flex flex-wrap gap-4 rounded-lg bg-muted p-4">
+                <label class="flex min-w-44 flex-1 flex-col gap-2 text-sm">
+                    نام محصول
+                    <input id="catalog-search" type="search" class="rounded-lg border bg-background px-3 py-2" />
+                </label>
+                <label class="flex min-w-44 flex-1 flex-col gap-2 text-sm">
+                    دسته‌بندی
+                    <select id="catalog-category" class="rounded-lg border bg-background px-3 py-2">
+                        <option value="">همه دسته‌ها</option>
+                        {categories.map(({ name, slug }) => <option value={slug}>{name}</option>)}
+                    </select>
+                </label>
+            </div>
+            <p id="catalog-empty" class="text-text/60" role="status" hidden={products.length > 0}>
+                محصولی پیدا نشد.
+            </p>
+            <ul class="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+                {products.map((product) => (
+                    <li data-catalog-name={product.name} data-catalog-category={categorySlugs.get(product.categoryId)}>
+                        <ProductCard product={product} showPrice={false} />
+                    </li>
+                ))}
+            </ul>
+        </section>
+    </main>
+</Layout>
+
+<script>
+    const search = document.querySelector<HTMLInputElement>("#catalog-search")!;
+    const category = document.querySelector<HTMLSelectElement>("#catalog-category")!;
+    const empty = document.querySelector<HTMLElement>("#catalog-empty")!;
+    const products = Array.from(document.querySelectorAll<HTMLElement>("[data-catalog-name]"));
+    const initialCategory = new URLSearchParams(window.location.search).get("category");
+    if (Array.from(category.options).some((option) => option.value === initialCategory)) {
+        category.value = initialCategory ?? "";
+    }
+
+    const normalize = (text: string) => text.trim().toLowerCase().replaceAll("ي", "ی").replaceAll("ك", "ک");
+    const filterProducts = () => {
+        const query = normalize(search.value);
+        let hasMatches = false;
+        for (const product of products) {
+            const matchesName = normalize(product.dataset.catalogName ?? "").includes(query);
+            const matchesCategory = !category.value || product.dataset.catalogCategory === category.value;
+            product.hidden = !(matchesName && matchesCategory);
+            hasMatches ||= !product.hidden;
+        }
+        empty.hidden = hasMatches;
+    };
+
+    search.addEventListener("input", filterProducts);
+    category.addEventListener("change", filterProducts);
+    filterProducts();
+</script>
