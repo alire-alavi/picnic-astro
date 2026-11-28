@@ -1,0 +1,1258 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Navbar from "../../components/Navbar.astro";
+import "../../styles/css/global.css";
+import "../../styles/css/dependencies/swiper.min.css";
+import "../../styles/css/fonts.css";
+import "../../styles/css/app.css";
+import "../../styles/css/base.css";
+import "../../styles/css/reset.css";
+---
+
+<Layout>
+  <Navbar />
+
+  <main class="flex-grow bg-background mt-4 pt-[106px]">
+    <div class="container grid grid-cols-12 gap-4 pb-28 pt-10 lg:pb-10">
+      <!-- Sidebar -->
+      <div class="col-span-12 lg:col-span-3">
+        <!-- Profile card -->
+        <div class="mb-4 rounded-lg bg-muted p-4 shadow">
+          <!-- Desktop -->
+          <div class="hidden items-center justify-between gap-2 lg:flex">
+            <div class="flex items-center gap-4">
+              <div
+                class="flex h-10 w-10 items-center justify-center rounded-full bg-primary-btn text-center text-lg font-semibold text-white"
+                data-user-avatar
+              >
+                ک
+              </div>
+              <p class="line-clamp-1" data-user-name>کاربر</p>
+            </div>
+            <a
+              href="/dashboard/profile-edit"
+              class="rounded-full text-sm text-primary duration-300 hover:text-primary/80"
+            >
+              <div class="i-lucide-pen-line size-6"></div>
+            </a>
+          </div>
+          <!-- Mobile -->
+          <div class="flex items-center justify-center lg:hidden">
+            <div class="flex flex-col items-center justify-center gap-y-4">
+              <div class="relative">
+                <div
+                  class="flex h-16 w-16 items-center justify-center rounded-full bg-primary-btn text-center text-lg font-semibold text-white"
+                  data-user-avatar-mobile
+                >
+                  ک
+                </div>
+                <a
+                  href="/dashboard/profile-edit"
+                  class="absolute -right-3 -top-2 rounded-full border bg-muted p-1.5 text-sm text-primary"
+                >
+                  <div class="i-lucide-pen-line size-5"></div>
+                </a>
+              </div>
+              <div class="text-center">
+                <p class="line-clamp-1" data-user-name-mobile>کاربر</p>
+                <p class="text-text/95" data-user-phone></p>
+              </div>
+              <div>
+                <button
+                  type="button"
+                  data-drawer-target="profile-drawer"
+                  data-drawer-show="profile-drawer"
+                  data-drawer-placement="bottom"
+                  aria-controls="profile-drawer"
+                  class="btn-primary flex items-center gap-1 px-4 py-2"
+                >
+                  <div class="i-lucide-align-justify size-5"></div>
+                  منوی پنل کاربری
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Desktop nav links -->
+        <div class="hidden rounded-lg shadow lg:block">
+          <ul class="relative space-y-2 rounded-lg bg-muted p-2">
+            <li>
+              <a
+                href="/dashboard"
+                class="inline-flex w-full items-center justify-between rounded-lg p-4 text-text/80 duration-300 hover:text-primary"
+              >
+                <div class="flex items-center gap-4">
+                  <div class="i-solar-home-smile-linear size-6"></div>
+                  پیشخوان
+                </div>
+              </a>
+            </li>
+            <li>
+              <a
+                href="/dashboard/orders"
+                class="inline-flex w-full items-center justify-between rounded-lg p-4 text-text/80 duration-300 hover:text-primary"
+              >
+                <div class="flex items-center gap-4">
+                  <div class="i-mingcute-shopping-bag-3-line size-6"></div>
+                  سفارش ها
+                </div>
+              </a>
+            </li>
+            <li>
+              <a
+                href="/dashboard/notifications"
+                class="inline-flex w-full items-center justify-between rounded-lg p-4 text-text/80 duration-300 hover:text-primary"
+              >
+                <div class="flex items-center gap-4">
+                  <div class="i-lucide-bell size-6"></div>
+                  پیام ها
+                </div>
+              </a>
+            </li>
+            <li>
+              <a
+                href="/dashboard/favorites"
+                class="inline-flex w-full items-center justify-between rounded-lg p-4 text-text/80 duration-300 hover:text-primary"
+              >
+                <div class="flex items-center gap-4">
+                  <div class="i-lucide-heart size-6"></div>
+                  علاقه‌‍مندی ها
+                </div>
+              </a>
+            </li>
+            <li>
+              <a
+                href="/dashboard/recent"
+                class="inline-flex w-full items-center justify-between rounded-lg p-4 text-text/80 duration-300 hover:text-primary"
+              >
+                <div class="flex items-center gap-4">
+                  <div class="i-lucide-mouse-pointer-click size-6"></div>
+                  بازدید های اخیر
+                </div>
+              </a>
+            </li>
+            <li>
+              <a
+                href="/dashboard/addresses"
+                class="inline-flex w-full items-center justify-between rounded-lg bg-primary/5 p-4 text-primary duration-300"
+              >
+                <div class="flex items-center gap-4">
+                  <div
+                    class="i-material-symbols-location-on-outline-rounded size-6"
+                  >
+                  </div>
+                  آدرس ها
+                </div>
+              </a>
+            </li>
+            <li>
+              <a
+                href="/dashboard/profile-edit"
+                class="inline-flex w-full items-center justify-between rounded-lg p-4 text-text/80 duration-300 hover:text-primary"
+              >
+                <div class="flex items-center gap-4">
+                  <div class="i-lucide-user-cog size-6"></div>
+                  اطلاعات حساب کاربری
+                </div>
+              </a>
+            </li>
+            <li>
+              <button
+                type="button"
+                data-logout-btn
+                class="inline-flex w-full items-center justify-between p-4 text-warning"
+              >
+                <div class="flex items-center gap-4">
+                  <div class="i-mingcute-exit-line size-6"></div>
+                  خروج
+                </div>
+              </button>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Content -->
+      <div class="col-span-12 lg:col-span-9">
+        <div class="rounded-lg bg-muted shadow">
+          <div class="py-5">
+            <div class="mb-16 flex justify-between px-5">
+              <h1 class="relative w-fit font-medium lg:text-lg">
+                آدرس های شما
+                <span
+                  class="absolute right-0 top-10 h-[3px] w-full animate-fill-border rounded-full bg-primary"
+                ></span>
+              </h1>
+              <button
+                type="button"
+                data-modal-target="address-add-modal"
+                data-modal-toggle="address-add-modal"
+                class="btn-primary flex items-center gap-1 px-4 py-1.5"
+              >
+                <div
+                  class="i-material-symbols-add-location-alt-outline-rounded size-6"
+                >
+                </div>
+                آدرس جدید
+              </button>
+            </div>
+            <!-- Address list populated via API -->
+            <ul class="mb-4 space-y-4 px-5" data-addresses>
+              <!-- Empty state -->
+              <li data-addresses-empty>
+                <div class="flex justify-center py-10">
+                  <div
+                    class="flex flex-col items-center justify-center gap-y-4 text-text/60"
+                  >
+                    <div
+                      class="i-material-symbols-location-on-outline-rounded size-20"
+                    >
+                    </div>
+                    <p class="md:text-lg">آدرسی ثبت نشده است</p>
+                  </div>
+                </div>
+              </li>
+            </ul>
+            <div class="px-5">
+              <button
+                type="button"
+                data-modal-target="address-add-modal"
+                data-modal-toggle="address-add-modal"
+                class="not-prose relative flex w-full cursor-pointer rounded-md border text-sm transition-all duration-150 hover:bg-background hover:text-success disabled:cursor-not-allowed disabled:blur"
+              >
+                <span class="w-full">
+                  <span
+                    class="relative flex h-20 w-full select-none items-center justify-center overflow-hidden rounded opacity-75"
+                  >
+                    <svg
+                      class="absolute inset-0 h-full w-full stroke-border"
+                      fill="none"
+                    >
+                      <defs>
+                        <pattern
+                          id="pattern-5c1e4f0e-62d5-498b-8ff0-cf77bb448c8e"
+                          x="0"
+                          y="0"
+                          width="10"
+                          height="10"
+                          patternUnits="userSpaceOnUse"
+                        >
+                          <path d="M-3 13 15-5M-5 5l18-18M-1 21 17 3"></path>
+                        </pattern>
+                      </defs>
+                      <rect
+                        stroke="none"
+                        fill="url(#pattern-5c1e4f0e-62d5-498b-8ff0-cf77bb448c8e)"
+                        width="100%"
+                        height="100%"></rect>
+                    </svg>
+                    <span
+                      class="i-material-symbols-add-location-alt-outline-rounded z-10 size-8 text-primary"
+                    >
+                    </span>
+                  </span>
+                </span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Mobile bottom nav -->
+  <div
+    data-onscrollclass="translate-y-full"
+    class="fixed inset-x-0 bottom-0 z-20 bg-muted duration-300 lg:hidden"
+  >
+    <div class="container flex items-center text-sm">
+      <div class="w-1/4 py-1">
+        <a href="/" class="flex flex-col items-center justify-center">
+          <i
+            class="i-solar-home-smile-linear size-6 items-center justify-center"
+          ></i>
+          <p class="pt-2 text-xs xs:text-sm">خانه</p>
+        </a>
+      </div>
+      <div class="w-1/4 py-1">
+        <a href="/categories" class="flex flex-col items-center justify-center">
+          <i class="i-iconamoon-category-light size-6"></i>
+          <p class="pt-2 text-xs xs:text-sm">دسته ها</p>
+        </a>
+      </div>
+      <div class="w-1/4 py-1">
+        <a href="/cart" class="flex flex-col items-center justify-center">
+          <i class="i-lucide-shopping-cart size-6"></i>
+          <p class="pt-2 text-xs xs:text-sm">سبد خرید</p>
+        </a>
+      </div>
+      <div
+        class="w-1/4 border-b-2 border-primary py-1 font-medium text-primary"
+      >
+        <a href="/dashboard" class="flex flex-col items-center justify-center">
+          <i class="i-lucide-user-round size-6"></i>
+          <p class="pt-2 text-xs xs:text-sm">حساب من</p>
+        </a>
+      </div>
+    </div>
+  </div>
+</Layout>
+
+<!-- Mobile profile drawer -->
+<div
+  id="profile-drawer"
+  class="fixed inset-x-0 bottom-0 z-40 max-h-[80dvh] w-full translate-y-full rounded-t-xl border-t bg-muted transition-transform duration-500"
+  tabindex="-1"
+  aria-labelledby="profile-drawer"
+>
+  <div class="flex h-full max-h-[80dvh] flex-col gap-4">
+    <div class="grow overflow-y-auto">
+      <ul class="space-y-2 p-4 pl-2">
+        <li>
+          <a
+            href="/dashboard"
+            class="inline-flex w-full items-center justify-between rounded-lg p-4 text-text/80 duration-300 hover:text-primary"
+          >
+            <div class="flex items-center gap-4">
+              <div class="i-solar-home-smile-linear size-6"></div>
+              پیشخوان
+            </div>
+          </a>
+        </li>
+        <li>
+          <a
+            href="/dashboard/orders"
+            class="inline-flex w-full items-center justify-between rounded-lg p-4 text-text/80 duration-300 hover:text-primary"
+          >
+            <div class="flex items-center gap-4">
+              <div class="i-mingcute-shopping-bag-3-line size-6"></div>
+              سفارش ها
+            </div>
+          </a>
+        </li>
+        <li>
+          <a
+            href="/dashboard/notifications"
+            class="inline-flex w-full items-center justify-between rounded-lg p-4 text-text/80 duration-300 hover:text-primary"
+          >
+            <div class="flex items-center gap-4">
+              <div class="i-lucide-bell size-6"></div>
+              پیام ها
+            </div>
+          </a>
+        </li>
+        <li>
+          <a
+            href="/dashboard/favorites"
+            class="inline-flex w-full items-center justify-between rounded-lg p-4 text-text/80 duration-300 hover:text-primary"
+          >
+            <div class="flex items-center gap-4">
+              <div class="i-lucide-heart size-6"></div>
+              علاقه‌‍مندی ها
+            </div>
+          </a>
+        </li>
+        <li>
+          <a
+            href="/dashboard/recent"
+            class="inline-flex w-full items-center justify-between rounded-lg p-4 text-text/80 duration-300 hover:text-primary"
+          >
+            <div class="flex items-center gap-4">
+              <div class="i-lucide-mouse-pointer-click size-6"></div>
+              بازدید های اخیر
+            </div>
+          </a>
+        </li>
+        <li>
+          <a
+            href="/dashboard/addresses"
+            class="inline-flex w-full items-center justify-between rounded-lg bg-primary/5 p-4 text-primary duration-300"
+          >
+            <div class="flex items-center gap-4">
+              <div
+                class="i-material-symbols-location-on-outline-rounded size-6"
+              >
+              </div>
+              آدرس ها
+            </div>
+          </a>
+        </li>
+        <li>
+          <a
+            href="/dashboard/profile-edit"
+            class="inline-flex w-full items-center justify-between rounded-lg p-4 text-text/80 duration-300 hover:text-primary"
+          >
+            <div class="flex items-center gap-4">
+              <div class="i-lucide-user-cog size-6"></div>
+              اطلاعات حساب کاربری
+            </div>
+          </a>
+        </li>
+        <li>
+          <button
+            type="button"
+            data-logout-btn
+            class="inline-flex w-full items-center justify-between p-4 text-warning"
+          >
+            <div class="flex items-center gap-4">
+              <div class="i-mingcute-exit-line size-6"></div>
+              خروج
+            </div>
+          </button>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- Address Add Modal -->
+<div
+  id="address-add-modal"
+  tabindex="-1"
+  aria-hidden="true"
+  class="fixed left-0 right-0 top-0 z-50 hidden h-[calc(100%-1rem)] max-h-full w-full overflow-y-auto overflow-x-hidden p-4 md:inset-0"
+>
+  <div class="relative max-h-full w-full max-w-xl">
+    <div class="overflow-hidden rounded-lg border bg-muted shadow">
+      <!-- Header -->
+      <div class="px-4 py-5 sm:px-6">
+        <div class="flex items-center justify-between">
+          <h3 class="md:text-lg">ثبت آدرس جدید</h3>
+          <button
+            class="text-text/60 duration-300 hover:text-text/95"
+            data-modal-hide="address-add-modal"
+            type="button"
+          >
+            <div class="i-lucide-x size-6"></div>
+            <span class="sr-only">Close menu</span>
+          </button>
+        </div>
+      </div>
+      <div class="space-y-6 px-4 py-5 sm:p-6">
+        <!-- Content -->
+        <div class="mb-4 grid grid-cols-2 gap-x-4 gap-y-2 sm:gap-6 sm:gap-y-4">
+          <!-- Name -->
+          <div class="col-span-2 sm:col-span-1">
+            <div class="w-full space-y-3">
+              <label
+                for="add-name"
+                class="relative block w-full rounded-lg border bg-muted shadow-sm duration-300 focus-within:border-primary"
+              >
+                <input
+                  type="text"
+                  id="add-name"
+                  placeholder=" "
+                  class="peer w-full rounded-lg bg-transparent p-2 placeholder-transparent outline-none focus:ring-0 xs:px-4 xs:py-3"
+                />
+                <span
+                  class="pointer-events-none absolute start-3 -translate-y-1/2 rounded-full bg-muted px-2 text-xs text-text/80 transition-all duration-200 peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-sm peer-focus:text-xs peer-focus:peer-placeholder-shown:top-0 xs:text-sm md:text-sm md:peer-placeholder-shown:text-base md:peer-focus:text-sm lg:start-5"
+                >
+                  نام گیرنده
+                </span>
+              </label>
+              <p class="h-5 text-sm text-warning"></p>
+            </div>
+          </div>
+          <!-- Family -->
+          <div class="col-span-2 sm:col-span-1">
+            <div class="w-full space-y-3">
+              <label
+                for="add-family"
+                class="relative block w-full rounded-lg border bg-muted shadow-sm duration-300 focus-within:border-primary"
+              >
+                <input
+                  type="text"
+                  id="add-family"
+                  placeholder=" "
+                  class="peer w-full rounded-lg bg-transparent p-2 placeholder-transparent outline-none focus:ring-0 xs:px-4 xs:py-3"
+                />
+                <span
+                  class="pointer-events-none absolute start-3 -translate-y-1/2 rounded-full bg-muted px-2 text-xs text-text/80 transition-all duration-200 peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-sm peer-focus:text-xs peer-focus:peer-placeholder-shown:top-0 xs:text-sm md:text-sm md:peer-placeholder-shown:text-base md:peer-focus:text-sm lg:start-5"
+                >
+                  نام خانوادگی گیرنده
+                </span>
+              </label>
+              <p class="h-5 text-sm text-warning"></p>
+            </div>
+          </div>
+          <!-- Phone -->
+          <div class="col-span-2 sm:col-span-1">
+            <div class="w-full space-y-3">
+              <label
+                for="add-phone"
+                class="relative block w-full rounded-lg border bg-muted shadow-sm duration-300 focus-within:border-primary"
+              >
+                <input
+                  type="text"
+                  id="add-phone"
+                  placeholder=" "
+                  class="peer w-full rounded-lg bg-transparent p-2 placeholder-transparent outline-none focus:ring-0 xs:px-4 xs:py-3"
+                />
+                <span
+                  class="pointer-events-none absolute start-3 -translate-y-1/2 rounded-full bg-muted px-2 text-xs text-text/80 transition-all duration-200 peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-sm peer-focus:text-xs peer-focus:peer-placeholder-shown:top-0 xs:text-sm md:text-sm md:peer-placeholder-shown:text-base md:peer-focus:text-sm lg:start-5"
+                >
+                  شماره تماس گیرنده
+                </span>
+              </label>
+              <p class="h-5 text-sm text-warning"></p>
+            </div>
+          </div>
+          <!-- National Code -->
+          <div class="col-span-2 sm:col-span-1">
+            <div class="w-full space-y-3">
+              <label
+                for="add-nCode"
+                class="relative block w-full rounded-lg border bg-muted shadow-sm duration-300 focus-within:border-primary"
+              >
+                <input
+                  type="text"
+                  id="add-nCode"
+                  placeholder=" "
+                  class="peer w-full rounded-lg bg-transparent p-2 placeholder-transparent outline-none focus:ring-0 xs:px-4 xs:py-3"
+                />
+                <span
+                  class="pointer-events-none absolute start-3 -translate-y-1/2 rounded-full bg-muted px-2 text-xs text-text/80 transition-all duration-200 peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-sm peer-focus:text-xs peer-focus:peer-placeholder-shown:top-0 xs:text-sm md:text-sm md:peer-placeholder-shown:text-base md:peer-focus:text-sm lg:start-5"
+                >
+                  کد ملی گیرنده
+                </span>
+              </label>
+              <p class="h-5 text-sm text-warning"></p>
+            </div>
+          </div>
+          <!-- Address -->
+          <div class="col-span-2">
+            <div class="w-full space-y-3">
+              <label
+                for="add-address"
+                class="relative block w-full rounded-lg border bg-muted shadow-sm duration-300 focus-within:border-primary"
+              >
+                <textarea
+                  id="add-address"
+                  placeholder=" "
+                  rows="2"
+                  class="peer w-full resize-none rounded-lg bg-transparent p-2 placeholder-transparent outline-none focus:ring-0 xs:px-4 xs:py-3"
+                ></textarea>
+                <span
+                  class="pointer-events-none absolute start-3 -translate-y-1/2 rounded-full bg-muted px-2 text-xs text-text/80 transition-all duration-200 peer-placeholder-shown:top-6 peer-placeholder-shown:text-sm peer-focus:text-xs peer-focus:peer-placeholder-shown:top-0 xs:text-sm md:text-sm md:peer-placeholder-shown:text-base md:peer-focus:text-sm lg:start-5"
+                >
+                  نشانی گیرنده
+                </span>
+              </label>
+              <p class="h-5 text-sm text-warning"></p>
+            </div>
+          </div>
+          <!-- Province -->
+          <div class="col-span-2 sm:col-span-1">
+            <div class="w-full space-y-3">
+              <label
+                for="add-province"
+                class="relative block w-full rounded-lg border bg-muted shadow-sm duration-300 focus-within:border-primary"
+              >
+                <input
+                  type="text"
+                  id="add-province"
+                  placeholder=" "
+                  class="peer w-full rounded-lg bg-transparent p-2 placeholder-transparent outline-none focus:ring-0 xs:px-4 xs:py-3"
+                />
+                <span
+                  class="pointer-events-none absolute start-3 -translate-y-1/2 rounded-full bg-muted px-2 text-xs text-text/80 transition-all duration-200 peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-sm peer-focus:text-xs peer-focus:peer-placeholder-shown:top-0 xs:text-sm md:text-sm md:peer-placeholder-shown:text-base md:peer-focus:text-sm lg:start-5"
+                >
+                  استان
+                </span>
+              </label>
+              <p class="h-5 text-sm text-warning"></p>
+            </div>
+          </div>
+          <!-- City -->
+          <div class="col-span-2 sm:col-span-1">
+            <div class="w-full space-y-3">
+              <label
+                for="add-city"
+                class="relative block w-full rounded-lg border bg-muted shadow-sm duration-300 focus-within:border-primary"
+              >
+                <input
+                  type="text"
+                  id="add-city"
+                  placeholder=" "
+                  class="peer w-full rounded-lg bg-transparent p-2 placeholder-transparent outline-none focus:ring-0 xs:px-4 xs:py-3"
+                />
+                <span
+                  class="pointer-events-none absolute start-3 -translate-y-1/2 rounded-full bg-muted px-2 text-xs text-text/80 transition-all duration-200 peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-sm peer-focus:text-xs peer-focus:peer-placeholder-shown:top-0 xs:text-sm md:text-sm md:peer-placeholder-shown:text-base md:peer-focus:text-sm lg:start-5"
+                >
+                  شهر
+                </span>
+              </label>
+              <p class="h-5 text-sm text-warning"></p>
+            </div>
+          </div>
+          <!-- Building Number, Building Unit -->
+          <div
+            class="col-span-2 flex w-full items-center gap-x-4 gap-y-5 sm:col-span-1 sm:gap-6"
+          >
+            <div class="w-full space-y-3">
+              <label
+                for="add-bNumber"
+                class="relative block w-full rounded-lg border bg-muted shadow-sm duration-300 focus-within:border-primary"
+              >
+                <input
+                  type="text"
+                  id="add-bNumber"
+                  placeholder=" "
+                  class="peer w-full rounded-lg bg-transparent p-2 placeholder-transparent outline-none focus:ring-0 xs:px-4 xs:py-3"
+                />
+                <span
+                  class="pointer-events-none absolute start-3 -translate-y-1/2 rounded-full bg-muted px-2 text-xs text-text/80 transition-all duration-200 peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-sm peer-focus:text-xs peer-focus:peer-placeholder-shown:top-0 xs:text-sm md:text-sm md:peer-placeholder-shown:text-base md:peer-focus:text-sm lg:start-5"
+                >
+                  پلاک
+                </span>
+              </label>
+              <p class="h-5 text-sm text-warning"></p>
+            </div>
+            <div class="w-full space-y-3">
+              <label
+                for="add-bUnit"
+                class="relative block w-full rounded-lg border bg-muted shadow-sm duration-300 focus-within:border-primary"
+              >
+                <input
+                  type="text"
+                  id="add-bUnit"
+                  placeholder=" "
+                  class="peer w-full rounded-lg bg-transparent p-2 placeholder-transparent outline-none focus:ring-0 xs:px-4 xs:py-3"
+                />
+                <span
+                  class="pointer-events-none absolute start-3 -translate-y-1/2 rounded-full bg-muted px-2 text-xs text-text/80 transition-all duration-200 peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-sm peer-focus:text-xs peer-focus:peer-placeholder-shown:top-0 xs:text-sm md:text-sm md:peer-placeholder-shown:text-base md:peer-focus:text-sm lg:start-5"
+                >
+                  واحد
+                </span>
+              </label>
+              <p class="h-5 text-sm text-warning"></p>
+            </div>
+          </div>
+          <!-- Postal Code -->
+          <div class="col-span-2 sm:col-span-1">
+            <div class="w-full space-y-3">
+              <label
+                for="add-pCode"
+                class="relative block w-full rounded-lg border bg-muted shadow-sm duration-300 focus-within:border-primary"
+              >
+                <input
+                  type="text"
+                  id="add-pCode"
+                  placeholder=" "
+                  class="peer w-full rounded-lg bg-transparent p-2 placeholder-transparent outline-none focus:ring-0 xs:px-4 xs:py-3"
+                />
+                <span
+                  class="pointer-events-none absolute start-3 -translate-y-1/2 rounded-full bg-muted px-2 text-xs text-text/80 transition-all duration-200 peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-sm peer-focus:text-xs peer-focus:peer-placeholder-shown:top-0 xs:text-sm md:text-sm md:peer-placeholder-shown:text-base md:peer-focus:text-sm lg:start-5"
+                >
+                  کد پستی
+                </span>
+              </label>
+              <p class="h-5 text-sm text-warning"></p>
+            </div>
+          </div>
+        </div>
+        <!-- Footer -->
+        <div class="flex justify-end">
+          <button
+            id="address-add-submit"
+            type="button"
+            class="btn-primary flex w-full items-center gap-1 px-4 py-3 md:w-auto"
+          >
+            <span
+              class="i-material-symbols-add-location-alt-outline-rounded size-6"
+            ></span>
+            <span>ثبت آدرس جدید</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Address Edit Modal -->
+<div
+  id="address-edit-modal"
+  tabindex="-1"
+  aria-hidden="true"
+  class="fixed left-0 right-0 top-0 z-50 hidden h-[calc(100%-1rem)] max-h-full w-full overflow-y-auto overflow-x-hidden p-4 md:inset-0"
+>
+  <div class="relative max-h-full w-full max-w-xl">
+    <div class="overflow-hidden rounded-lg border bg-muted shadow">
+      <!-- Header -->
+      <div class="px-4 py-5 sm:px-6">
+        <div class="flex items-center justify-between">
+          <h3 class="md:text-lg">ویرایش آدرس</h3>
+          <button
+            class="text-text/60 duration-300 hover:text-text/95"
+            data-modal-hide="address-edit-modal"
+            type="button"
+          >
+            <div class="i-lucide-x size-6"></div>
+            <span class="sr-only">Close menu</span>
+          </button>
+        </div>
+      </div>
+      <div class="space-y-6 px-4 py-5 sm:p-6">
+        <!-- Content -->
+        <div class="mb-4 grid grid-cols-2 gap-x-4 gap-y-2 sm:gap-6 sm:gap-y-4">
+          <!-- Name -->
+          <div class="col-span-2 sm:col-span-1">
+            <div class="w-full space-y-3">
+              <label
+                for="edit-name"
+                class="relative block w-full rounded-lg border bg-muted shadow-sm duration-300 focus-within:border-primary"
+              >
+                <input
+                  type="text"
+                  id="edit-name"
+                  placeholder=" "
+                  class="peer w-full rounded-lg bg-transparent p-2 placeholder-transparent outline-none focus:ring-0 xs:px-4 xs:py-3"
+                />
+                <span
+                  class="pointer-events-none absolute start-3 -translate-y-1/2 rounded-full bg-muted px-2 text-xs text-text/80 transition-all duration-200 peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-sm peer-focus:text-xs peer-focus:peer-placeholder-shown:top-0 xs:text-sm md:text-sm md:peer-placeholder-shown:text-base md:peer-focus:text-sm lg:start-5"
+                >
+                  نام گیرنده
+                </span>
+              </label>
+              <p class="h-5 text-sm text-warning"></p>
+            </div>
+          </div>
+          <!-- Family -->
+          <div class="col-span-2 sm:col-span-1">
+            <div class="w-full space-y-3">
+              <label
+                for="edit-family"
+                class="relative block w-full rounded-lg border bg-muted shadow-sm duration-300 focus-within:border-primary"
+              >
+                <input
+                  type="text"
+                  id="edit-family"
+                  placeholder=" "
+                  class="peer w-full rounded-lg bg-transparent p-2 placeholder-transparent outline-none focus:ring-0 xs:px-4 xs:py-3"
+                />
+                <span
+                  class="pointer-events-none absolute start-3 -translate-y-1/2 rounded-full bg-muted px-2 text-xs text-text/80 transition-all duration-200 peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-sm peer-focus:text-xs peer-focus:peer-placeholder-shown:top-0 xs:text-sm md:text-sm md:peer-placeholder-shown:text-base md:peer-focus:text-sm lg:start-5"
+                >
+                  نام خانوادگی گیرنده
+                </span>
+              </label>
+              <p class="h-5 text-sm text-warning"></p>
+            </div>
+          </div>
+          <!-- Phone -->
+          <div class="col-span-2 sm:col-span-1">
+            <div class="w-full space-y-3">
+              <label
+                for="edit-phone"
+                class="relative block w-full rounded-lg border bg-muted shadow-sm duration-300 focus-within:border-primary"
+              >
+                <input
+                  type="text"
+                  id="edit-phone"
+                  placeholder=" "
+                  class="peer w-full rounded-lg bg-transparent p-2 placeholder-transparent outline-none focus:ring-0 xs:px-4 xs:py-3"
+                />
+                <span
+                  class="pointer-events-none absolute start-3 -translate-y-1/2 rounded-full bg-muted px-2 text-xs text-text/80 transition-all duration-200 peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-sm peer-focus:text-xs peer-focus:peer-placeholder-shown:top-0 xs:text-sm md:text-sm md:peer-placeholder-shown:text-base md:peer-focus:text-sm lg:start-5"
+                >
+                  شماره تماس گیرنده
+                </span>
+              </label>
+              <p class="h-5 text-sm text-warning"></p>
+            </div>
+          </div>
+          <!-- National Code -->
+          <div class="col-span-2 sm:col-span-1">
+            <div class="w-full space-y-3">
+              <label
+                for="edit-nCode"
+                class="relative block w-full rounded-lg border bg-muted shadow-sm duration-300 focus-within:border-primary"
+              >
+                <input
+                  type="text"
+                  id="edit-nCode"
+                  placeholder=" "
+                  class="peer w-full rounded-lg bg-transparent p-2 placeholder-transparent outline-none focus:ring-0 xs:px-4 xs:py-3"
+                />
+                <span
+                  class="pointer-events-none absolute start-3 -translate-y-1/2 rounded-full bg-muted px-2 text-xs text-text/80 transition-all duration-200 peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-sm peer-focus:text-xs peer-focus:peer-placeholder-shown:top-0 xs:text-sm md:text-sm md:peer-placeholder-shown:text-base md:peer-focus:text-sm lg:start-5"
+                >
+                  کد ملی گیرنده
+                </span>
+              </label>
+              <p class="h-5 text-sm text-warning"></p>
+            </div>
+          </div>
+          <!-- Address -->
+          <div class="col-span-2">
+            <div class="w-full space-y-3">
+              <label
+                for="edit-address"
+                class="relative block w-full rounded-lg border bg-muted shadow-sm duration-300 focus-within:border-primary"
+              >
+                <textarea
+                  id="edit-address"
+                  placeholder=" "
+                  rows="2"
+                  class="peer w-full resize-none rounded-lg bg-transparent p-2 placeholder-transparent outline-none focus:ring-0 xs:px-4 xs:py-3"
+                ></textarea>
+                <span
+                  class="pointer-events-none absolute start-3 -translate-y-1/2 rounded-full bg-muted px-2 text-xs text-text/80 transition-all duration-200 peer-placeholder-shown:top-6 peer-placeholder-shown:text-sm peer-focus:text-xs peer-focus:peer-placeholder-shown:top-0 xs:text-sm md:text-sm md:peer-placeholder-shown:text-base md:peer-focus:text-sm lg:start-5"
+                >
+                  نشانی گیرنده
+                </span>
+              </label>
+              <p class="h-5 text-sm text-warning"></p>
+            </div>
+          </div>
+          <!-- Province -->
+          <div class="col-span-2 sm:col-span-1">
+            <div class="w-full space-y-3">
+              <label
+                for="edit-province"
+                class="relative block w-full rounded-lg border bg-muted shadow-sm duration-300 focus-within:border-primary"
+              >
+                <input
+                  type="text"
+                  id="edit-province"
+                  placeholder=" "
+                  class="peer w-full rounded-lg bg-transparent p-2 placeholder-transparent outline-none focus:ring-0 xs:px-4 xs:py-3"
+                />
+                <span
+                  class="pointer-events-none absolute start-3 -translate-y-1/2 rounded-full bg-muted px-2 text-xs text-text/80 transition-all duration-200 peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-sm peer-focus:text-xs peer-focus:peer-placeholder-shown:top-0 xs:text-sm md:text-sm md:peer-placeholder-shown:text-base md:peer-focus:text-sm lg:start-5"
+                >
+                  استان
+                </span>
+              </label>
+              <p class="h-5 text-sm text-warning"></p>
+            </div>
+          </div>
+          <!-- City -->
+          <div class="col-span-2 sm:col-span-1">
+            <div class="w-full space-y-3">
+              <label
+                for="edit-city"
+                class="relative block w-full rounded-lg border bg-muted shadow-sm duration-300 focus-within:border-primary"
+              >
+                <input
+                  type="text"
+                  id="edit-city"
+                  placeholder=" "
+                  class="peer w-full rounded-lg bg-transparent p-2 placeholder-transparent outline-none focus:ring-0 xs:px-4 xs:py-3"
+                />
+                <span
+                  class="pointer-events-none absolute start-3 -translate-y-1/2 rounded-full bg-muted px-2 text-xs text-text/80 transition-all duration-200 peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-sm peer-focus:text-xs peer-focus:peer-placeholder-shown:top-0 xs:text-sm md:text-sm md:peer-placeholder-shown:text-base md:peer-focus:text-sm lg:start-5"
+                >
+                  شهر
+                </span>
+              </label>
+              <p class="h-5 text-sm text-warning"></p>
+            </div>
+          </div>
+          <!-- Building Number, Building Unit -->
+          <div
+            class="col-span-2 flex w-full items-center gap-x-4 gap-y-5 sm:col-span-1 sm:gap-6"
+          >
+            <div class="w-full space-y-3">
+              <label
+                for="edit-bNumber"
+                class="relative block w-full rounded-lg border bg-muted shadow-sm duration-300 focus-within:border-primary"
+              >
+                <input
+                  type="text"
+                  id="edit-bNumber"
+                  placeholder=" "
+                  class="peer w-full rounded-lg bg-transparent p-2 placeholder-transparent outline-none focus:ring-0 xs:px-4 xs:py-3"
+                />
+                <span
+                  class="pointer-events-none absolute start-3 -translate-y-1/2 rounded-full bg-muted px-2 text-xs text-text/80 transition-all duration-200 peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-sm peer-focus:text-xs peer-focus:peer-placeholder-shown:top-0 xs:text-sm md:text-sm md:peer-placeholder-shown:text-base md:peer-focus:text-sm lg:start-5"
+                >
+                  پلاک
+                </span>
+              </label>
+              <p class="h-5 text-sm text-warning"></p>
+            </div>
+            <div class="w-full space-y-3">
+              <label
+                for="edit-bUnit"
+                class="relative block w-full rounded-lg border bg-muted shadow-sm duration-300 focus-within:border-primary"
+              >
+                <input
+                  type="text"
+                  id="edit-bUnit"
+                  placeholder=" "
+                  class="peer w-full rounded-lg bg-transparent p-2 placeholder-transparent outline-none focus:ring-0 xs:px-4 xs:py-3"
+                />
+                <span
+                  class="pointer-events-none absolute start-3 -translate-y-1/2 rounded-full bg-muted px-2 text-xs text-text/80 transition-all duration-200 peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-sm peer-focus:text-xs peer-focus:peer-placeholder-shown:top-0 xs:text-sm md:text-sm md:peer-placeholder-shown:text-base md:peer-focus:text-sm lg:start-5"
+                >
+                  واحد
+                </span>
+              </label>
+              <p class="h-5 text-sm text-warning"></p>
+            </div>
+          </div>
+          <!-- Postal Code -->
+          <div class="col-span-2 sm:col-span-1">
+            <div class="w-full space-y-3">
+              <label
+                for="edit-pCode"
+                class="relative block w-full rounded-lg border bg-muted shadow-sm duration-300 focus-within:border-primary"
+              >
+                <input
+                  type="text"
+                  id="edit-pCode"
+                  placeholder=" "
+                  class="peer w-full rounded-lg bg-transparent p-2 placeholder-transparent outline-none focus:ring-0 xs:px-4 xs:py-3"
+                />
+                <span
+                  class="pointer-events-none absolute start-3 -translate-y-1/2 rounded-full bg-muted px-2 text-xs text-text/80 transition-all duration-200 peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-sm peer-focus:text-xs peer-focus:peer-placeholder-shown:top-0 xs:text-sm md:text-sm md:peer-placeholder-shown:text-base md:peer-focus:text-sm lg:start-5"
+                >
+                  کد پستی
+                </span>
+              </label>
+              <p class="h-5 text-sm text-warning"></p>
+            </div>
+          </div>
+        </div>
+        <!-- Footer -->
+        <div class="flex justify-end">
+          <button
+            id="address-edit-submit"
+            type="button"
+            class="btn-primary flex w-full items-center gap-1 px-4 py-3 md:w-auto"
+          >
+            <span
+              class="i-material-symbols-edit-location-alt-outline-rounded size-6"
+            ></span>
+            <span>ویرایش آدرس</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Address Remove Modal -->
+<div
+  id="address-remove-modal"
+  tabindex="-1"
+  aria-hidden="true"
+  class="fixed left-0 right-0 top-0 z-50 hidden h-[calc(100%-1rem)] max-h-full w-full overflow-y-auto overflow-x-hidden p-4 md:inset-0"
+>
+  <div class="relative max-h-full w-full max-w-sm">
+    <div class="overflow-hidden rounded-lg border bg-muted shadow">
+      <!-- Header -->
+      <div class="px-4 py-5 sm:px-6">
+        <div class="flex items-center justify-between">
+          <h3 class="md:text-lg">حذف آدرس</h3>
+          <button
+            class="text-text/60 duration-300 hover:text-text/95"
+            data-modal-hide="address-remove-modal"
+            type="button"
+          >
+            <div class="i-lucide-x size-6"></div>
+            <span class="sr-only">Close menu</span>
+          </button>
+        </div>
+      </div>
+      <div class="space-y-6 px-4 py-5 sm:p-6">
+        <!-- Content -->
+        <p>آیا از حذف این آدرس اطمینان دارید؟</p>
+        <!-- Footer -->
+        <div class="flex justify-end gap-4">
+          <button
+            data-modal-hide="address-remove-modal"
+            type="button"
+            class="btn-secondary w-full rounded-lg px-4 py-2 md:w-auto"
+          >
+            <span>انصراف</span>
+          </button>
+          <button
+            id="address-remove-submit"
+            type="button"
+            class="btn-warning w-full rounded-lg px-4 py-2 md:w-auto"
+          >
+            <span>حذف آدرس</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { getCurrentUser, getAccessToken } from "../../lib/auth";
+  import {
+    getAddresses,
+    createAddress,
+    updateAddress,
+    deleteAddress,
+  } from "../../lib/address";
+  import { AddressType } from "../../types/address.d";
+  import type { Address } from "../../types/address.d";
+
+  let addresses: Address[] = [];
+  let currentEditId: string | null = null;
+  let currentRemoveId: string | null = null;
+
+  function val(id: string): string {
+    return (
+      (
+        document.getElementById(id) as HTMLInputElement | HTMLTextAreaElement
+      )?.value?.trim() ?? ""
+    );
+  }
+
+  function setVal(id: string, value: string) {
+    const el = document.getElementById(id) as
+      HTMLInputElement | HTMLTextAreaElement | null;
+    if (el) el.value = value;
+  }
+
+  function showModal(id: string) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    // @ts-ignore — Flowbite Modal is loaded globally via flowbite.min.js
+    const modal = new window.Modal(el);
+    modal.show();
+  }
+
+  function hideModal(id: string) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    // @ts-ignore
+    const modal = window.FlowbiteInstances?.getInstance?.("Modal", id);
+    modal?.hide();
+  }
+
+  function renderAddresses() {
+    const list = document.querySelector<HTMLElement>("[data-addresses]");
+    if (!list) return;
+
+    const emptyEl = list.querySelector<HTMLElement>("[data-addresses-empty]");
+
+    // Remove all address items (but keep the empty state node)
+    Array.from(list.children).forEach((child) => {
+      if (!child.hasAttribute("data-addresses-empty")) child.remove();
+    });
+
+    if (addresses.length === 0) {
+      if (emptyEl) emptyEl.style.display = "";
+      return;
+    }
+
+    if (emptyEl) emptyEl.style.display = "none";
+
+    addresses.forEach((addr) => {
+      const li = document.createElement("li");
+      li.innerHTML = `
+        <div class="relative block rounded-lg border p-4 shadow hover:border-border/50">
+          <div class="mb-4 flex justify-between gap-x-2 sm:mb-2">
+            <div class="line-clamp-1 text-sm text-text/95 xs:text-base">
+              <div class="flex gap-1">
+                <div class="flex min-w-fit">
+                  <p>${addr.state},</p>
+                  <p>${addr.city}</p>
+                </div>
+              </div>
+              <div class="flex gap-1">
+                <p>${addr.street}</p>
+                <p>- کد پستی ${addr.zipCode}</p>
+              </div>
+            </div>
+          </div>
+          <div class="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+            <p class="line-clamp-1 text-sm text-text/60">${addr.country}</p>
+            <div class="grid w-full grid-cols-2 gap-2 sm:w-fit">
+              <div>
+                <button
+                  type="button"
+                  data-remove-address-id="${addr.id}"
+                  class="inline-flex h-8 w-full items-center justify-center gap-x-2 whitespace-nowrap rounded-md bg-warning/10 px-3 text-sm font-medium text-warning ring-offset-background transition-colors hover:bg-warning/20 focus-visible:outline-none focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
+                >
+                  <div class="i-material-symbols-wrong-location-outline-rounded size-5"></div>
+                  حذف
+                </button>
+              </div>
+              <div>
+                <button
+                  type="button"
+                  data-edit-address-id="${addr.id}"
+                  class="inline-flex h-8 w-full items-center justify-center gap-x-2 whitespace-nowrap rounded-md bg-success/10 px-3 text-sm font-medium text-success ring-offset-background transition-colors hover:bg-success/20 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50"
+                >
+                  <div class="i-material-symbols-edit-location-alt-outline-rounded size-5"></div>
+                  ویرایش
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+      list.appendChild(li);
+    });
+  }
+
+  async function loadAddresses() {
+    try {
+      addresses = await getAddresses();
+    } catch {
+      addresses = [];
+    }
+    renderAddresses();
+  }
+
+  async function init() {
+    const token = getAccessToken();
+    if (!token) {
+      window.location.href = "/auth";
+      return;
+    }
+
+    const user = await getCurrentUser();
+    if (!user) {
+      window.location.href = "/auth";
+      return;
+    }
+
+    const displayName = user.name || user.phoneNumber || user.email || "کاربر";
+    document
+      .querySelectorAll<HTMLElement>(
+        "[data-user-name], [data-user-name-mobile]",
+      )
+      .forEach((el) => {
+        el.textContent = displayName;
+      });
+
+    const initial = displayName.charAt(0).toUpperCase();
+    document
+      .querySelectorAll<HTMLElement>(
+        "[data-user-avatar], [data-user-avatar-mobile]",
+      )
+      .forEach((el) => {
+        el.textContent = initial;
+      });
+
+    const phoneEl = document.querySelector<HTMLElement>("[data-user-phone]");
+    if (phoneEl) phoneEl.textContent = user.phoneNumber || "";
+
+    await loadAddresses();
+
+    // Event delegation for address list actions
+    document
+      .querySelector("[data-addresses]")
+      ?.addEventListener("click", (e) => {
+        const removeBtn = (e.target as Element).closest<HTMLElement>(
+          "[data-remove-address-id]",
+        );
+        const editBtn = (e.target as Element).closest<HTMLElement>(
+          "[data-edit-address-id]",
+        );
+
+        if (removeBtn) {
+          currentRemoveId = removeBtn.getAttribute("data-remove-address-id");
+          showModal("address-remove-modal");
+        }
+
+        if (editBtn) {
+          currentEditId = editBtn.getAttribute("data-edit-address-id");
+          const addr = addresses.find((a) => a.id === currentEditId);
+          if (addr) {
+            setVal("edit-address", addr.street);
+            setVal("edit-province", addr.state);
+            setVal("edit-city", addr.city);
+            setVal("edit-pCode", addr.zipCode);
+          }
+          showModal("address-edit-modal");
+        }
+      });
+
+    // Add form submit
+    document
+      .getElementById("address-add-submit")
+      ?.addEventListener("click", async () => {
+        const street = val("add-address");
+        const state = val("add-province");
+        const city = val("add-city");
+        const zipCode = val("add-pCode");
+        if (!street || !state || !city || !zipCode) return;
+
+        try {
+          const newAddr = await createAddress({
+            street,
+            state,
+            city,
+            zipCode,
+            country: "ایران",
+            type: AddressType.SHIPPING,
+          });
+          addresses.push(newAddr);
+          renderAddresses();
+          hideModal("address-add-modal");
+          // Clear add form
+          [
+            "add-address",
+            "add-province",
+            "add-city",
+            "add-pCode",
+            "add-name",
+            "add-family",
+            "add-phone",
+            "add-nCode",
+            "add-bNumber",
+            "add-bUnit",
+          ].forEach((id) => setVal(id, ""));
+        } catch (err) {
+          console.error("Failed to create address:", err);
+        }
+      });
+
+    // Edit form submit
+    document
+      .getElementById("address-edit-submit")
+      ?.addEventListener("click", async () => {
+        if (!currentEditId) return;
+        const street = val("edit-address");
+        const state = val("edit-province");
+        const city = val("edit-city");
+        const zipCode = val("edit-pCode");
+        if (!street || !state || !city || !zipCode) return;
+
+        try {
+          const updated = await updateAddress(currentEditId, {
+            street,
+            state,
+            city,
+            zipCode,
+          });
+          addresses = addresses.map((a) =>
+            a.id === currentEditId ? updated : a,
+          );
+          renderAddresses();
+          hideModal("address-edit-modal");
+          currentEditId = null;
+        } catch (err) {
+          console.error("Failed to update address:", err);
+        }
+      });
+
+    // Remove confirm submit
+    document
+      .getElementById("address-remove-submit")
+      ?.addEventListener("click", async () => {
+        if (!currentRemoveId) return;
+        try {
+          await deleteAddress(currentRemoveId);
+          addresses = addresses.filter((a) => a.id !== currentRemoveId);
+          renderAddresses();
+          hideModal("address-remove-modal");
+          currentRemoveId = null;
+        } catch (err) {
+          console.error("Failed to delete address:", err);
+        }
+      });
+  }
+
+  document.addEventListener("DOMContentLoaded", init);
+</script>

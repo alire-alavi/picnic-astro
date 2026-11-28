@@ -1,0 +1,1128 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Navbar from "../../components/Navbar.astro";
+import "../../styles/css/global.css";
+import "../../styles/css/dependencies/swiper.min.css";
+import "../../styles/css/fonts.css";
+import "../../styles/css/app.css";
+import "../../styles/css/base.css";
+import "../../styles/css/reset.css";
+---
+
+<Layout>
+  <Navbar />
+
+  <main class="flex-grow bg-background mt-4 pt-[106px]">
+    <div class="container grid grid-cols-12 gap-4 pb-28 pt-10 lg:pb-10">
+      <!-- Sidebar -->
+      <div class="col-span-12 lg:col-span-3">
+        <!-- Profile card -->
+        <div class="mb-4 rounded-lg bg-muted p-4 shadow">
+          <!-- Desktop -->
+          <div class="hidden items-center justify-between gap-2 lg:flex">
+            <div class="flex items-center gap-4">
+              <div
+                class="flex h-10 w-10 items-center justify-center rounded-full bg-primary-btn text-center text-lg font-semibold text-white"
+                data-user-avatar
+              >
+                ک
+              </div>
+              <p class="line-clamp-1" data-user-name>کاربر</p>
+            </div>
+            <a
+              href="/dashboard/profile-edit"
+              class="rounded-full text-sm text-primary duration-300 hover:text-primary/80"
+            >
+              <div class="i-lucide-pen-line size-6"></div>
+            </a>
+          </div>
+          <!-- Mobile -->
+          <div class="flex items-center justify-center lg:hidden">
+            <div class="flex flex-col items-center justify-center gap-y-4">
+              <div class="relative">
+                <div
+                  class="flex h-16 w-16 items-center justify-center rounded-full bg-primary-btn text-center text-lg font-semibold text-white"
+                  data-user-avatar-mobile
+                >
+                  ک
+                </div>
+                <a
+                  href="/dashboard/profile-edit"
+                  class="absolute -right-3 -top-2 rounded-full border bg-muted p-1.5 text-sm text-primary"
+                >
+                  <div class="i-lucide-pen-line size-5"></div>
+                </a>
+              </div>
+              <div class="text-center">
+                <p class="line-clamp-1" data-user-name-mobile>کاربر</p>
+                <p class="text-text/95" data-user-phone></p>
+              </div>
+              <div>
+                <button
+                  type="button"
+                  data-drawer-target="profile-drawer"
+                  data-drawer-show="profile-drawer"
+                  data-drawer-placement="bottom"
+                  aria-controls="profile-drawer"
+                  class="btn-primary flex items-center gap-1 px-4 py-2"
+                >
+                  <div class="i-lucide-align-justify size-5"></div>
+                  منوی پنل کاربری
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Desktop nav links -->
+        <div class="hidden rounded-lg shadow lg:block">
+          <ul class="relative space-y-2 rounded-lg bg-muted p-2">
+            <li>
+              <a
+                href="/dashboard"
+                class="inline-flex w-full items-center justify-between rounded-lg p-4 text-text/80 duration-300 hover:text-primary"
+              >
+                <div class="flex items-center gap-4">
+                  <div class="i-solar-home-smile-linear size-6"></div>
+                  پیشخوان
+                </div>
+              </a>
+            </li>
+            <li>
+              <a
+                href="/dashboard/orders"
+                class="inline-flex w-full items-center justify-between rounded-lg p-4 text-text/80 duration-300 hover:text-primary"
+              >
+                <div class="flex items-center gap-4">
+                  <div class="i-mingcute-shopping-bag-3-line size-6"></div>
+                  سفارش ها
+                </div>
+              </a>
+            </li>
+            <li>
+              <a
+                href="/dashboard/notifications"
+                class="inline-flex w-full items-center justify-between rounded-lg p-4 text-text/80 duration-300 hover:text-primary"
+              >
+                <div class="flex items-center gap-4">
+                  <div class="i-lucide-bell size-6"></div>
+                  پیام ها
+                </div>
+              </a>
+            </li>
+            <li>
+              <a
+                href="/dashboard/favorites"
+                class="inline-flex w-full items-center justify-between rounded-lg p-4 text-text/80 duration-300 hover:text-primary"
+              >
+                <div class="flex items-center gap-4">
+                  <div class="i-lucide-heart size-6"></div>
+                  علاقه‌‍مندی ها
+                </div>
+              </a>
+            </li>
+            <li>
+              <a
+                href="/dashboard/recent"
+                class="inline-flex w-full items-center justify-between rounded-lg p-4 text-text/80 duration-300 hover:text-primary"
+              >
+                <div class="flex items-center gap-4">
+                  <div class="i-lucide-mouse-pointer-click size-6"></div>
+                  بازدید های اخیر
+                </div>
+              </a>
+            </li>
+            <li>
+              <a
+                href="/dashboard/addresses"
+                class="inline-flex w-full items-center justify-between rounded-lg p-4 text-text/80 duration-300 hover:text-primary"
+              >
+                <div class="flex items-center gap-4">
+                  <div
+                    class="i-material-symbols-location-on-outline-rounded size-6"
+                  >
+                  </div>
+                  آدرس ها
+                </div>
+              </a>
+            </li>
+            <li>
+              <a
+                href="/dashboard/profile-edit"
+                class="inline-flex w-full items-center justify-between rounded-lg bg-primary/5 p-4 text-primary duration-300"
+              >
+                <div class="flex items-center gap-4">
+                  <div class="i-lucide-user-cog size-6"></div>
+                  اطلاعات حساب کاربری
+                </div>
+              </a>
+            </li>
+            <li>
+              <button
+                type="button"
+                data-logout-btn
+                class="inline-flex w-full items-center justify-between p-4 text-warning"
+              >
+                <div class="flex items-center gap-4">
+                  <div class="i-mingcute-exit-line size-6"></div>
+                  خروج
+                </div>
+              </button>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Content -->
+      <div class="col-span-12 lg:col-span-9">
+        <div class="rounded-lg bg-muted shadow">
+          <div class="py-5">
+            <div class="mb-16 flex justify-between px-5">
+              <h1 class="relative w-fit font-medium lg:text-lg">
+                اطلاعات حساب کاربری شما
+                <span
+                  class="absolute right-0 top-10 h-[3px] w-full animate-fill-border rounded-full bg-primary"
+                ></span>
+              </h1>
+            </div>
+            <div class="grid grid-cols-2 gap-4 px-5">
+              <!-- Name -->
+              <div class="col-span-2 sm:col-span-1">
+                <button
+                  class="w-full"
+                  type="button"
+                  data-modal-target="fullname-modal"
+                  data-modal-toggle="fullname-modal"
+                >
+                  <div
+                    class="relative rounded-lg border p-4 hover:border-border/50"
+                  >
+                    <div class="flex justify-between">
+                      <div class="flex flex-col items-start gap-y-2">
+                        <div class="text-text/60">نام و نام خانوادگی</div>
+                        <div class="mr-2 text-text/80" data-display-name>—</div>
+                      </div>
+                      <div class="i-lucide-pen size-5 text-primary"></div>
+                    </div>
+                  </div>
+                </button>
+              </div>
+              <!-- Phone -->
+              <div class="col-span-2 sm:col-span-1">
+                <button
+                  class="w-full"
+                  type="button"
+                  data-modal-target="phone-modal"
+                  data-modal-toggle="phone-modal"
+                >
+                  <div
+                    class="relative rounded-lg border p-4 hover:border-border/50"
+                  >
+                    <div
+                      class="absolute inset-x-0 -bottom-2.5 mx-auto w-fit rounded-full bg-muted px-3 text-sm font-medium text-success"
+                    >
+                      تایید شده
+                    </div>
+                    <div class="flex justify-between">
+                      <div class="flex flex-col items-start gap-y-2">
+                        <div class="text-text/60">شماره موبایل</div>
+                        <div class="mr-2 text-text/80" data-display-phone>
+                          —
+                        </div>
+                      </div>
+                      <div class="i-lucide-pen size-5 text-primary"></div>
+                    </div>
+                  </div>
+                </button>
+              </div>
+              <!-- Email -->
+              <div class="col-span-2 sm:col-span-1">
+                <button
+                  class="w-full"
+                  type="button"
+                  data-modal-target="email-modal"
+                  data-modal-toggle="email-modal"
+                >
+                  <div
+                    class="relative rounded-lg border p-4 hover:border-border/50"
+                  >
+                    <div
+                      class="absolute inset-x-0 -bottom-2.5 mx-auto w-fit rounded-full bg-muted px-3 text-sm font-medium text-success"
+                    >
+                      تایید شده
+                    </div>
+                    <div class="flex justify-between">
+                      <div class="flex flex-col items-start gap-y-2">
+                        <div class="text-text/60">ایمیل</div>
+                        <div class="mr-2 text-text/80" data-display-email>
+                          —
+                        </div>
+                      </div>
+                      <div class="i-lucide-pen size-5 text-primary"></div>
+                    </div>
+                  </div>
+                </button>
+              </div>
+              <!-- Password -->
+              <div class="col-span-2">
+                <button
+                  class="w-full"
+                  type="button"
+                  data-modal-target="password-modal"
+                  data-modal-toggle="password-modal"
+                >
+                  <div
+                    class="relative rounded-lg border p-4 hover:border-border/50"
+                  >
+                    <div class="flex justify-between">
+                      <div class="flex flex-col items-start gap-y-2">
+                        <div class="text-text/60">کلمه عبور</div>
+                        <div class="mr-2 select-none text-text/80">
+                          <label>
+                            <input
+                              type="password"
+                              disabled
+                              readonly
+                              value="password"
+                              class="cursor-pointer select-none bg-transparent"
+                            />
+                          </label>
+                        </div>
+                      </div>
+                      <div class="i-lucide-pen size-5 text-primary"></div>
+                    </div>
+                  </div>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Mobile bottom nav -->
+  <div
+    data-onscrollclass="translate-y-full"
+    class="fixed inset-x-0 bottom-0 z-20 bg-muted duration-300 lg:hidden"
+  >
+    <div class="container flex items-center text-sm">
+      <div class="w-1/4 py-1">
+        <a href="/" class="flex flex-col items-center justify-center">
+          <i
+            class="i-solar-home-smile-linear size-6 items-center justify-center"
+          ></i>
+          <p class="pt-2 text-xs xs:text-sm">خانه</p>
+        </a>
+      </div>
+      <div class="w-1/4 py-1">
+        <a href="/categories" class="flex flex-col items-center justify-center">
+          <i class="i-iconamoon-category-light size-6"></i>
+          <p class="pt-2 text-xs xs:text-sm">دسته ها</p>
+        </a>
+      </div>
+      <div class="w-1/4 py-1">
+        <a href="/cart" class="flex flex-col items-center justify-center">
+          <i class="i-lucide-shopping-cart size-6"></i>
+          <p class="pt-2 text-xs xs:text-sm">سبد خرید</p>
+        </a>
+      </div>
+      <div
+        class="w-1/4 border-b-2 border-primary py-1 font-medium text-primary"
+      >
+        <a
+          href="/dashboard/profile-edit"
+          class="flex flex-col items-center justify-center"
+        >
+          <i class="i-lucide-user-round size-6"></i>
+          <p class="pt-2 text-xs xs:text-sm">حساب من</p>
+        </a>
+      </div>
+    </div>
+  </div>
+</Layout>
+
+<!-- Mobile profile drawer -->
+<div
+  id="profile-drawer"
+  class="fixed inset-x-0 bottom-0 z-40 max-h-[80dvh] w-full translate-y-full rounded-t-xl border-t bg-muted transition-transform duration-500"
+  tabindex="-1"
+  aria-labelledby="profile-drawer"
+>
+  <div class="flex h-full max-h-[80dvh] flex-col gap-4">
+    <div class="grow overflow-y-auto">
+      <ul class="space-y-2 p-4 pl-2">
+        <li>
+          <a
+            href="/dashboard"
+            class="inline-flex w-full items-center justify-between rounded-lg p-4 text-text/80 duration-300 hover:text-primary"
+          >
+            <div class="flex items-center gap-4">
+              <div class="i-solar-home-smile-linear size-6"></div>
+              پیشخوان
+            </div>
+          </a>
+        </li>
+        <li>
+          <a
+            href="/dashboard/orders"
+            class="inline-flex w-full items-center justify-between rounded-lg p-4 text-text/80 duration-300 hover:text-primary"
+          >
+            <div class="flex items-center gap-4">
+              <div class="i-mingcute-shopping-bag-3-line size-6"></div>
+              سفارش ها
+            </div>
+          </a>
+        </li>
+        <li>
+          <a
+            href="/dashboard/notifications"
+            class="inline-flex w-full items-center justify-between rounded-lg p-4 text-text/80 duration-300 hover:text-primary"
+          >
+            <div class="flex items-center gap-4">
+              <div class="i-lucide-bell size-6"></div>
+              پیام ها
+            </div>
+          </a>
+        </li>
+        <li>
+          <a
+            href="/dashboard/favorites"
+            class="inline-flex w-full items-center justify-between rounded-lg p-4 text-text/80 duration-300 hover:text-primary"
+          >
+            <div class="flex items-center gap-4">
+              <div class="i-lucide-heart size-6"></div>
+              علاقه‌‍مندی ها
+            </div>
+          </a>
+        </li>
+        <li>
+          <a
+            href="/dashboard/recent"
+            class="inline-flex w-full items-center justify-between rounded-lg p-4 text-text/80 duration-300 hover:text-primary"
+          >
+            <div class="flex items-center gap-4">
+              <div class="i-lucide-mouse-pointer-click size-6"></div>
+              بازدید های اخیر
+            </div>
+          </a>
+        </li>
+        <li>
+          <a
+            href="/dashboard/addresses"
+            class="inline-flex w-full items-center justify-between rounded-lg p-4 text-text/80 duration-300 hover:text-primary"
+          >
+            <div class="flex items-center gap-4">
+              <div
+                class="i-material-symbols-location-on-outline-rounded size-6"
+              >
+              </div>
+              آدرس ها
+            </div>
+          </a>
+        </li>
+        <li>
+          <a
+            href="/dashboard/profile-edit"
+            class="inline-flex w-full items-center justify-between rounded-lg bg-primary/5 p-4 text-primary duration-300"
+          >
+            <div class="flex items-center gap-4">
+              <div class="i-lucide-user-cog size-6"></div>
+              اطلاعات حساب کاربری
+            </div>
+          </a>
+        </li>
+        <li>
+          <button
+            type="button"
+            data-logout-btn
+            class="inline-flex w-full items-center justify-between p-4 text-warning"
+          >
+            <div class="flex items-center gap-4">
+              <div class="i-mingcute-exit-line size-6"></div>
+              خروج
+            </div>
+          </button>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- Full name Modal -->
+<div
+  id="fullname-modal"
+  tabindex="-1"
+  aria-hidden="true"
+  class="fixed left-0 right-0 top-0 z-50 hidden h-[calc(100%-1rem)] max-h-full w-full overflow-y-auto overflow-x-hidden p-4 md:inset-0"
+>
+  <div class="relative max-h-full w-full max-w-md">
+    <div class="overflow-hidden rounded-lg border bg-muted shadow">
+      <div class="px-4 py-5 sm:px-6">
+        <div class="flex items-center justify-between">
+          <h3 class="md:text-lg">تغییر نام و نام خانوادگی</h3>
+          <button
+            class="text-text/60 duration-300 hover:text-text/95"
+            data-modal-hide="fullname-modal"
+            type="button"
+          >
+            <div class="i-lucide-x size-6"></div>
+            <span class="sr-only">Close menu</span>
+          </button>
+        </div>
+      </div>
+      <div class="space-y-6 px-4 py-5 sm:p-6">
+        <div class="mb-4 grid grid-cols-2 gap-x-4 gap-y-2 sm:gap-6 sm:gap-y-4">
+          <div class="col-span-2 sm:col-span-1">
+            <div class="w-full space-y-3">
+              <label
+                for="fullname-first"
+                class="relative block w-full rounded-lg border bg-muted shadow-sm duration-300 focus-within:border-primary"
+              >
+                <input
+                  type="text"
+                  id="fullname-first"
+                  placeholder=" "
+                  class="peer w-full rounded-lg bg-transparent p-2 placeholder-transparent outline-none focus:ring-0 xs:px-4 xs:py-3"
+                />
+                <span
+                  class="pointer-events-none absolute start-3 -translate-y-1/2 rounded-full bg-muted px-2 text-xs text-text/80 transition-all duration-200 peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-sm peer-focus:text-xs peer-focus:peer-placeholder-shown:top-0 xs:text-sm md:text-sm md:peer-placeholder-shown:text-base md:peer-focus:text-sm lg:start-5"
+                >
+                  نام
+                </span>
+              </label>
+            </div>
+          </div>
+          <div class="col-span-2 sm:col-span-1">
+            <div class="w-full space-y-3">
+              <label
+                for="fullname-last"
+                class="relative block w-full rounded-lg border bg-muted shadow-sm duration-300 focus-within:border-primary"
+              >
+                <input
+                  type="text"
+                  id="fullname-last"
+                  placeholder=" "
+                  class="peer w-full rounded-lg bg-transparent p-2 placeholder-transparent outline-none focus:ring-0 xs:px-4 xs:py-3"
+                />
+                <span
+                  class="pointer-events-none absolute start-3 -translate-y-1/2 rounded-full bg-muted px-2 text-xs text-text/80 transition-all duration-200 peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-sm peer-focus:text-xs peer-focus:peer-placeholder-shown:top-0 xs:text-sm md:text-sm md:peer-placeholder-shown:text-base md:peer-focus:text-sm lg:start-5"
+                >
+                  نام خانوادگی
+                </span>
+              </label>
+            </div>
+          </div>
+        </div>
+        <p id="nameApiError" class="hidden text-sm text-warning"></p>
+        <p id="nameApiSuccess" class="hidden text-sm text-success">
+          نام با موفقیت تغییر یافت
+        </p>
+        <div class="flex justify-end gap-4">
+          <button
+            id="updateNameBtn"
+            type="button"
+            class="btn-primary w-full rounded-lg px-4 py-2 md:w-auto"
+          >
+            ویرایش
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Phone Modal -->
+<div
+  id="phone-modal"
+  tabindex="-1"
+  aria-hidden="true"
+  class="fixed left-0 right-0 top-0 z-50 hidden h-[calc(100%-1rem)] max-h-full w-full overflow-y-auto overflow-x-hidden p-4 md:inset-0"
+>
+  <div class="relative max-h-full w-full max-w-md">
+    <div class="overflow-hidden rounded-lg border bg-muted shadow">
+      <div class="px-4 py-5 sm:px-6">
+        <div class="flex items-center justify-between">
+          <h3 class="md:text-lg">تغییر شماره موبایل</h3>
+          <button
+            class="text-text/60 duration-300 hover:text-text/95"
+            data-modal-hide="phone-modal"
+            type="button"
+          >
+            <div class="i-lucide-x size-6"></div>
+            <span class="sr-only">Close menu</span>
+          </button>
+        </div>
+      </div>
+      <div class="space-y-6 px-4 py-5 sm:p-6">
+        <div class="mb-4">
+          <div class="w-full space-y-3">
+            <label
+              for="phone"
+              class="relative block w-full rounded-lg border bg-muted shadow-sm duration-300 focus-within:border-primary"
+            >
+              <input
+                type="text"
+                id="phone"
+                placeholder=" "
+                class="peer w-full rounded-lg bg-transparent p-2 placeholder-transparent outline-none focus:ring-0 xs:px-4 xs:py-3"
+              />
+              <span
+                class="pointer-events-none absolute start-3 -translate-y-1/2 rounded-full bg-muted px-2 text-xs text-text/80 transition-all duration-200 peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-sm peer-focus:text-xs peer-focus:peer-placeholder-shown:top-0 xs:text-sm md:text-sm md:peer-placeholder-shown:text-base md:peer-focus:text-sm lg:start-5"
+              >
+                شماره موبایل
+              </span>
+            </label>
+          </div>
+        </div>
+        <div class="flex justify-end gap-4">
+          <button
+            type="button"
+            class="btn-primary w-full rounded-lg px-4 py-2 md:w-auto"
+          >
+            ویرایش
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Email Modal -->
+<div
+  id="email-modal"
+  tabindex="-1"
+  aria-hidden="true"
+  class="fixed left-0 right-0 top-0 z-50 hidden h-[calc(100%-1rem)] max-h-full w-full overflow-y-auto overflow-x-hidden p-4 md:inset-0"
+>
+  <div class="relative max-h-full w-full max-w-md">
+    <div class="overflow-hidden rounded-lg border bg-muted shadow">
+      <div class="px-4 py-5 sm:px-6">
+        <div class="flex items-center justify-between">
+          <h3 class="md:text-lg">تغییر ایمیل</h3>
+          <button
+            class="text-text/60 duration-300 hover:text-text/95"
+            data-modal-hide="email-modal"
+            type="button"
+          >
+            <div class="i-lucide-x size-6"></div>
+            <span class="sr-only">Close menu</span>
+          </button>
+        </div>
+      </div>
+      <div class="space-y-6 px-4 py-5 sm:p-6">
+        <div class="mb-4">
+          <div class="w-full space-y-3">
+            <label
+              for="email"
+              class="relative block w-full rounded-lg border bg-muted shadow-sm duration-300 focus-within:border-primary"
+            >
+              <input
+                type="text"
+                id="email"
+                placeholder=" "
+                class="peer w-full rounded-lg bg-transparent p-2 placeholder-transparent outline-none focus:ring-0 xs:px-4 xs:py-3"
+              />
+              <span
+                class="pointer-events-none absolute start-3 -translate-y-1/2 rounded-full bg-muted px-2 text-xs text-text/80 transition-all duration-200 peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-sm peer-focus:text-xs peer-focus:peer-placeholder-shown:top-0 xs:text-sm md:text-sm md:peer-placeholder-shown:text-base md:peer-focus:text-sm lg:start-5"
+              >
+                ایمیل
+              </span>
+            </label>
+          </div>
+        </div>
+        <p id="emailApiError" class="hidden text-sm text-warning"></p>
+        <p id="emailApiSuccess" class="hidden text-sm text-success">
+          ایمیل با موفقیت تغییر یافت
+        </p>
+        <div class="flex justify-end gap-4">
+          <button
+            id="updateEmailBtn"
+            type="button"
+            class="btn-primary w-full rounded-lg px-4 py-2 md:w-auto"
+          >
+            ویرایش
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Password Modal -->
+<div
+  id="password-modal"
+  tabindex="-1"
+  aria-hidden="true"
+  class="fixed left-0 right-0 top-0 z-50 hidden h-[calc(100%-1rem)] max-h-full w-full overflow-y-auto overflow-x-hidden p-4 md:inset-0"
+>
+  <div class="relative max-h-full w-full max-w-md">
+    <div class="overflow-hidden rounded-lg border bg-muted shadow">
+      <div class="px-4 py-5 sm:px-6">
+        <div class="flex items-center justify-between">
+          <h3 class="md:text-lg">تغییر کلمه عبور</h3>
+          <button
+            class="text-text/60 duration-300 hover:text-text/95"
+            data-modal-hide="password-modal"
+            type="button"
+          >
+            <div class="i-lucide-x size-6"></div>
+            <span class="sr-only">Close menu</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="space-y-6 px-4 py-5 sm:p-6">
+        <!-- Old Password -->
+        <div class="w-full space-y-3">
+          <label
+            for="old_password"
+            class="relative block w-full rounded-lg border bg-muted shadow-sm duration-300 focus-within:border-primary"
+          >
+            <input
+              dir="ltr"
+              type="password"
+              id="old_password"
+              placeholder=" "
+              class="peer w-full rounded-lg bg-transparent p-3 text-left placeholder-transparent outline-none focus:ring-0 xs:p-4"
+            />
+            <span
+              class="pointer-events-none absolute start-3 -translate-y-1/2 rounded-full bg-muted px-2 text-xs text-text/80 transition-all duration-200 peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-sm peer-focus:text-xs peer-focus:peer-placeholder-shown:top-0 xs:text-sm md:text-sm md:peer-placeholder-shown:text-base md:peer-focus:text-sm lg:start-5"
+            >
+              کلمه عبور فعلی
+            </span>
+          </label>
+          <p id="oldPasswordError" class="h-5 text-sm text-warning"></p>
+        </div>
+
+        <!-- New Password -->
+        <div class="w-full space-y-3">
+          <label
+            for="new_password"
+            class="relative block w-full rounded-lg border bg-muted shadow-sm duration-300 focus-within:border-primary"
+          >
+            <input
+              dir="ltr"
+              type="password"
+              id="new_password"
+              placeholder=" "
+              class="peer w-full rounded-lg bg-transparent p-3 text-left placeholder-transparent outline-none focus:ring-0 xs:p-4"
+            />
+            <span
+              class="pointer-events-none absolute start-3 -translate-y-1/2 rounded-full bg-muted px-2 text-xs text-text/80 transition-all duration-200 peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-sm peer-focus:text-xs peer-focus:peer-placeholder-shown:top-0 xs:text-sm md:text-sm md:peer-placeholder-shown:text-base md:peer-focus:text-sm lg:start-5"
+            >
+              کلمه عبور جدید
+            </span>
+          </label>
+        </div>
+
+        <!-- Strength indicators -->
+        <div id="passwordValidation">
+          <div class="mb-4 flex items-center gap-x-2">
+            <div
+              id="validationIndicator1"
+              class="h-[3px] w-full rounded-full bg-zinc-200 dark:bg-zinc-600"
+            >
+            </div>
+            <div
+              id="validationIndicator2"
+              class="h-[3px] w-full rounded-full bg-zinc-200 dark:bg-zinc-600"
+            >
+            </div>
+            <div
+              id="validationIndicator3"
+              class="h-[3px] w-full rounded-full bg-zinc-200 dark:bg-zinc-600"
+            >
+            </div>
+            <div
+              id="validationIndicator4"
+              class="h-[3px] w-full rounded-full bg-zinc-200 dark:bg-zinc-600"
+            >
+            </div>
+          </div>
+          <ul
+            id="validationItems"
+            class="select-none list-disc space-y-2 px-4 text-xs text-text/60 md:text-sm"
+          >
+            <li id="lengthValidation"><p>حداقل 6 و حداکثر 18 حرف</p></li>
+            <li id="lowercaseValidation"><p>شامل یک حرف کوچک</p></li>
+            <li id="uppercaseValidation"><p>شامل یک حرف بزرگ</p></li>
+            <li id="numberValidation"><p>شامل عدد</p></li>
+          </ul>
+        </div>
+
+        <!-- Confirm Password -->
+        <div class="space-y-3">
+          <label
+            for="confirm_password"
+            class="relative block w-full rounded-lg border bg-muted shadow-sm duration-300 focus-within:border-primary"
+          >
+            <input
+              dir="ltr"
+              type="password"
+              id="confirm_password"
+              placeholder=" "
+              class="peer w-full rounded-lg bg-transparent p-3 text-left placeholder-transparent outline-none focus:ring-0 xs:p-4"
+            />
+            <span
+              class="pointer-events-none absolute start-3 -translate-y-1/2 rounded-full bg-muted px-2 text-xs text-text/80 transition-all duration-200 peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-sm peer-focus:text-xs peer-focus:peer-placeholder-shown:top-0 xs:text-sm md:text-sm md:peer-placeholder-shown:text-base md:peer-focus:text-sm lg:start-5"
+            >
+              کلمه عبور جدید تکرار
+            </span>
+          </label>
+          <p id="confirmPasswordError" class="h-5 text-sm text-warning"></p>
+        </div>
+
+        <!-- API feedback -->
+        <p id="passwordApiError" class="hidden text-sm text-warning"></p>
+        <p id="passwordApiSuccess" class="hidden text-sm text-success">
+          کلمه عبور با موفقیت تغییر یافت
+        </p>
+
+        <div class="flex justify-end gap-4">
+          <button
+            id="updatePasswordBtn"
+            type="button"
+            class="btn-primary w-full rounded-lg px-4 py-2 md:w-auto"
+          >
+            ویرایش
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { getCurrentUser, getAccessToken } from "../../lib/auth";
+  import { createClient } from "../../lib/graphql";
+
+  const UPDATE_PASSWORD_MUTATION = `
+    mutation UpdatePassword($input: UpdatePasswordInput!) {
+      updatePassword(input: $input) {
+        id
+      }
+    }
+  `;
+
+  const UPDATE_USER_MUTATION = `
+    mutation UpdateUser($input: UpdateUserInput!) {
+      updateUser(input: $input) {
+        id
+        email
+        name
+      }
+    }
+  `;
+
+  function passwordHasLowercase(p: string) {
+    return /[a-z]/.test(p);
+  }
+  function passwordHasUppercase(p: string) {
+    return /[A-Z]/.test(p);
+  }
+  function passwordHasNumber(p: string) {
+    return /\d/.test(p);
+  }
+  function passwordIsValidLength(p: string) {
+    return p.length >= 6 && p.length <= 18;
+  }
+
+  function updateStrengthIndicators(password: string) {
+    const checks = [
+      passwordIsValidLength(password),
+      passwordHasLowercase(password),
+      passwordHasUppercase(password),
+      passwordHasNumber(password),
+    ];
+    const validCount = checks.filter(Boolean).length;
+
+    const colors = [
+      "bg-zinc-200 dark:bg-zinc-600",
+      "bg-zinc-200 dark:bg-zinc-600",
+      "bg-zinc-200 dark:bg-zinc-600",
+      "bg-zinc-200 dark:bg-zinc-600",
+    ];
+    if (validCount === 1) colors[0] = "bg-red-500";
+    else if (validCount === 2) {
+      colors[0] = "bg-yellow-500";
+      colors[1] = "bg-yellow-500";
+    } else if (validCount === 3) {
+      colors[0] = colors[1] = colors[2] = "bg-sky-500";
+    } else if (validCount === 4) colors.fill("bg-green-500 dark:bg-green-400");
+
+    for (let i = 1; i <= 4; i++) {
+      const el = document.getElementById(`validationIndicator${i}`);
+      if (el) el.className = `w-full h-[3px] rounded-full ${colors[i - 1]}`;
+    }
+
+    const lengthEl = document.getElementById("lengthValidation");
+    const lcEl = document.getElementById("lowercaseValidation");
+    const ucEl = document.getElementById("uppercaseValidation");
+    const numEl = document.getElementById("numberValidation");
+
+    if (lengthEl) lengthEl.style.display = checks[0] ? "none" : "block";
+    if (lcEl) lcEl.style.display = checks[1] ? "none" : "block";
+    if (ucEl) ucEl.style.display = checks[2] ? "none" : "block";
+    if (numEl) numEl.style.display = checks[3] ? "none" : "block";
+  }
+
+  async function init() {
+    const token = getAccessToken();
+    if (!token) {
+      window.location.href = "/auth";
+      return;
+    }
+
+    const user = await getCurrentUser();
+    if (!user) {
+      window.location.href = "/auth";
+      return;
+    }
+
+    // Populate display fields
+    const displayName = user.name || "—";
+    document
+      .querySelectorAll<HTMLElement>("[data-display-name]")
+      .forEach((el) => {
+        el.textContent = displayName;
+      });
+
+    const displayPhone = user.phoneNumber || "—";
+    document
+      .querySelectorAll<HTMLElement>("[data-display-phone]")
+      .forEach((el) => {
+        el.textContent = displayPhone;
+      });
+
+    const displayEmail = user.email || "—";
+    document
+      .querySelectorAll<HTMLElement>("[data-display-email]")
+      .forEach((el) => {
+        el.textContent = displayEmail;
+      });
+
+    // Avatar initials
+    const initial = (user.name || user.phoneNumber || user.email || "ک")
+      .charAt(0)
+      .toUpperCase();
+    document
+      .querySelectorAll<HTMLElement>(
+        "[data-user-avatar], [data-user-avatar-mobile]",
+      )
+      .forEach((el) => {
+        el.textContent = initial;
+      });
+
+    // Mobile sidebar phone
+    const phoneEl = document.querySelector<HTMLElement>("[data-user-phone]");
+    if (phoneEl) phoneEl.textContent = user.phoneNumber || "";
+
+    // Prefill name modal (split full name into first / rest) and email modal.
+    const firstEl = document.getElementById(
+      "fullname-first",
+    ) as HTMLInputElement | null;
+    const lastEl = document.getElementById(
+      "fullname-last",
+    ) as HTMLInputElement | null;
+    if (firstEl && lastEl && user.name) {
+      const parts = user.name.trim().split(/\s+/);
+      firstEl.value = parts.shift() || "";
+      lastEl.value = parts.join(" ");
+    }
+
+    const emailInputEl = document.getElementById(
+      "email",
+    ) as HTMLInputElement | null;
+    if (emailInputEl) emailInputEl.value = user.email || "";
+
+    // Wiring: update name via updateUser
+    const nameBtn = document.getElementById("updateNameBtn");
+    if (nameBtn && firstEl && lastEl) {
+      nameBtn.addEventListener("click", async () => {
+        const errEl = document.getElementById("nameApiError")!;
+        const successEl = document.getElementById("nameApiSuccess")!;
+        errEl.classList.add("hidden");
+        successEl.classList.add("hidden");
+
+        const name = [firstEl.value.trim(), lastEl.value.trim()]
+          .filter(Boolean)
+          .join(" ")
+          .trim();
+        if (!name) {
+          errEl.textContent = "لطفا نام را وارد کنید";
+          errEl.classList.remove("hidden");
+          return;
+        }
+
+        nameBtn.setAttribute("disabled", "true");
+        nameBtn.textContent = "در حال ارسال...";
+        try {
+          const client = createClient(token);
+          const data = await client.request<{ updateUser: { name: string } }>(
+            UPDATE_USER_MUTATION,
+            { input: { name } },
+          );
+          const updatedName = data.updateUser.name || name;
+          document
+            .querySelectorAll<HTMLElement>("[data-display-name]")
+            .forEach((el) => {
+              el.textContent = updatedName;
+            });
+          document
+            .querySelectorAll<HTMLElement>(
+              "[data-user-name], [data-user-name-mobile]",
+            )
+            .forEach((el) => {
+              el.textContent = updatedName;
+            });
+          successEl.classList.remove("hidden");
+        } catch (err: unknown) {
+          errEl.textContent =
+            err instanceof Error
+              ? err.message
+              : "خطا در ارتباط با سرور. لطفا دوباره تلاش کنید";
+          errEl.classList.remove("hidden");
+        } finally {
+          nameBtn.removeAttribute("disabled");
+          nameBtn.textContent = "ویرایش";
+        }
+      });
+    }
+
+    // Wiring: update email via updateUser
+    const emailBtn = document.getElementById("updateEmailBtn");
+    if (emailBtn && emailInputEl) {
+      emailBtn.addEventListener("click", async () => {
+        const errEl = document.getElementById("emailApiError")!;
+        const successEl = document.getElementById("emailApiSuccess")!;
+        errEl.classList.add("hidden");
+        successEl.classList.add("hidden");
+
+        const email = emailInputEl.value.trim();
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+          errEl.textContent = "لطفا یک ایمیل معتبر وارد کنید";
+          errEl.classList.remove("hidden");
+          return;
+        }
+
+        emailBtn.setAttribute("disabled", "true");
+        emailBtn.textContent = "در حال ارسال...";
+        try {
+          const client = createClient(token);
+          const data = await client.request<{ updateUser: { email: string } }>(
+            UPDATE_USER_MUTATION,
+            { input: { email } },
+          );
+          const updatedEmail = data.updateUser.email || email;
+          document
+            .querySelectorAll<HTMLElement>("[data-display-email]")
+            .forEach((el) => {
+              el.textContent = updatedEmail;
+            });
+          successEl.classList.remove("hidden");
+        } catch (err: unknown) {
+          errEl.textContent =
+            err instanceof Error
+              ? err.message
+              : "خطا در ارتباط با سرور. لطفا دوباره تلاش کنید";
+          errEl.classList.remove("hidden");
+        } finally {
+          emailBtn.removeAttribute("disabled");
+          emailBtn.textContent = "ویرایش";
+        }
+      });
+    }
+
+    // Wiring: new password strength
+    const newPasswordEl = document.getElementById(
+      "new_password",
+    ) as HTMLInputElement | null;
+    if (newPasswordEl) {
+      newPasswordEl.addEventListener("input", () =>
+        updateStrengthIndicators(newPasswordEl.value),
+      );
+    }
+
+    // Wiring: submit password
+    const btn = document.getElementById("updatePasswordBtn");
+    if (btn) {
+      btn.addEventListener("click", async () => {
+        const oldPasswordEl = document.getElementById(
+          "old_password",
+        ) as HTMLInputElement;
+        const confirmPasswordEl = document.getElementById(
+          "confirm_password",
+        ) as HTMLInputElement;
+        const apiErrorEl = document.getElementById("passwordApiError")!;
+        const apiSuccessEl = document.getElementById("passwordApiSuccess")!;
+        const oldErrEl = document.getElementById("oldPasswordError")!;
+        const confirmErrEl = document.getElementById("confirmPasswordError")!;
+
+        apiErrorEl.classList.add("hidden");
+        apiSuccessEl.classList.add("hidden");
+        oldErrEl.textContent = "";
+        confirmErrEl.textContent = "";
+
+        const oldPassword = oldPasswordEl.value.trim();
+        const newPassword = newPasswordEl?.value ?? "";
+        const confirmPassword = confirmPasswordEl.value;
+
+        let hasError = false;
+
+        if (!oldPassword) {
+          oldErrEl.textContent = "لطفا کلمه عبور فعلی را وارد کنید";
+          hasError = true;
+        }
+
+        if (
+          !passwordIsValidLength(newPassword) ||
+          !passwordHasLowercase(newPassword) ||
+          !passwordHasUppercase(newPassword) ||
+          !passwordHasNumber(newPassword)
+        ) {
+          hasError = true;
+        }
+
+        if (newPassword !== confirmPassword) {
+          confirmErrEl.textContent = "کلمه عبور تکرار شده مطابقت ندارد";
+          hasError = true;
+        }
+
+        if (hasError) return;
+
+        btn.setAttribute("disabled", "true");
+        btn.textContent = "در حال ارسال...";
+
+        try {
+          const client = createClient(token);
+          await client.request(UPDATE_PASSWORD_MUTATION, {
+            input: {
+              userId: user.id,
+              oldPassword,
+              newPassword,
+            },
+          });
+
+          apiSuccessEl.classList.remove("hidden");
+          oldPasswordEl.value = "";
+          if (newPasswordEl) newPasswordEl.value = "";
+          confirmPasswordEl.value = "";
+          updateStrengthIndicators("");
+        } catch (err: unknown) {
+          const message =
+            err instanceof Error
+              ? err.message
+              : "خطا در ارتباط با سرور. لطفا دوباره تلاش کنید";
+          apiErrorEl.textContent = message;
+          apiErrorEl.classList.remove("hidden");
+        } finally {
+          btn.removeAttribute("disabled");
+          btn.textContent = "ویرایش";
+        }
+      });
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", init);
+</script>

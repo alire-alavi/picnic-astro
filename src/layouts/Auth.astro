@@ -16,8 +16,23 @@ import "../styles/css/base.css";
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
+        <script is:inline>
+            // Apply theme before first paint to avoid a light-mode flash on navigation.
+            // Inlined (not an external file) so it runs synchronously with no fetch delay.
+            (function () {
+                var defaultTheme = "dark";
+                var storedTheme = localStorage.getItem("theme");
+                if (!storedTheme) {
+                    storedTheme = defaultTheme;
+                    localStorage.setItem("theme", defaultTheme);
+                }
+                document.documentElement.classList.toggle(
+                    "dark",
+                    storedTheme === "dark"
+                );
+            })();
+        </script>
         <script defer src="/src/scripts/theme.js"></script>
-        <script src="/src/scripts/mount.js"></script>
 
         <title>{title}</title>
     </head>

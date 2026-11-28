@@ -44,9 +44,13 @@ const offer: OfferType = Astro.props.offer;
                                       class="relative flex size-18 items-center justify-center rounded-full bg-secondary"
                                   >
                                       <img
-                                          src={product.image?.url || dummyImage}
+                                          src={
+                                              product.thumbnail?.url ||
+                                              dummyImage
+                                          }
                                           alt={
-                                              product.image?.alt || product.name
+                                              product.thumbnail?.alt ||
+                                              product.name
                                           }
                                           class="size-14 rounded-full object-cover"
                                       />

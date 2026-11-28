@@ -1,0 +1,188 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Navbar from "../../components/Navbar.astro";
+import { getCart } from "../../lib/cart";
+import type { Product } from "../../types/product.d";
+import "../../styles/css/global.css";
+import "../../styles/css/dependencies/swiper.min.css";
+import "../../styles/css/fonts.css";
+import "../../styles/css/app.css";
+import "../../styles/css/base.css";
+import "../../styles/css/dependencies/nouislider.min.css";
+import "../../styles/css/reset.css";
+
+const cart = await getCart();
+const itemCount =
+    cart?.orderItems.reduce((sum, item) => sum + item.quantity, 0) || 0;
+---
+
+<Layout>
+    <Navbar />
+
+    <main class="flex-grow bg-background pt-[106px]">
+        <div class="container pb-28 pt-6 lg:pb-10">
+            <!--  Breadcrumb -->
+            <div class="mb-2 rounded-lg bg-muted shadow lg:mb-6">
+                <ol
+                    class="relative grid grid-cols-3 overflow-hidden rounded-lg"
+                >
+                    <li
+                        class="z-10 flex flex-col items-center justify-center gap-2 p-4 text-xs text-primary sm:text-sm md:text-base"
+                    >
+                        <div
+                            class="i-lucide-shopping-cart h-6 w-6 md:h-8 md:w-8"
+                        >
+                        </div>
+                        <p class="leading-none">سبد خرید</p>
+                    </li>
+                    <li
+                        class="z-10 flex flex-col items-center justify-center gap-2 p-4 text-xs text-primary/50 sm:text-sm md:text-base"
+                    >
+                        <div
+                            class="i-lucide-clipboard-pen-line h-6 w-6 md:h-8 md:w-8"
+                        >
+                        </div>
+
+                        <p class="leading-none">شیوه ارسال</p>
+                    </li>
+                    <li
+                        class="z-10 flex flex-col items-center justify-center gap-2 p-4 text-xs text-primary/50 sm:text-sm md:text-base"
+                    >
+                        <div class="i-lucide-credit-card h-6 w-6 md:h-8 md:w-8">
+                        </div>
+
+                        <p class="leading-none">پرداخت</p>
+                    </li>
+                    <!--  for position set value 0 , 33.33% , 66.66%  -->
+                    <div
+                        class="absolute bottom-0 z-0 h-full w-1/3 touch-none bg-primary/10 transition-all duration-300"
+                        style="inset-inline-start: 0"
+                    >
+                    </div>
+                </ol>
+            </div>
+            <!-- Content -->
+            <div class="grid grid-cols-12 gap-2 lg:gap-6">
+                <div class="col-span-12 lg:col-span-8">
+                    <div class="rounded-lg bg-muted shadow">
+                        <div
+                            class="flex items-center justify-between gap-2 p-4"
+                        >
+                            <h1
+                                class="flex items-center gap-x-4 text-sm xs:text-base md:text-lg"
+                            >
+                                سبد خرید
+                                <span class="text-sm text-text/60">
+                                    ( <span data-checkout-count
+                                        >{itemCount}</span
+                                    > کالا )
+                                </span>
+                            </h1>
+                            <button
+                                data-clear-cart
+                                class="inline-flex h-9 items-center justify-center gap-x-2 whitespace-nowrap rounded-md px-3 text-sm font-medium text-warning ring-offset-background transition-colors hover:text-warning/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
+                                type="button"
+                            >
+                                <div class="i-lucide-trash-2 h-5 w-5"></div>
+                                <span>حذف همه</span>
+                            </button>
+                        </div>
+                        <ul class="divide-y" data-checkout-items></ul>
+                        <div class="hidden py-12" data-empty-cart>
+                            <div class="flex items-center justify-center">
+                                <div
+                                    class="flex flex-col items-center justify-center gap-4"
+                                >
+                                    <div class="i-lucide-package-x w-50 h-50">
+                                    </div>
+                                    <div>سبد خرید شما خالی می‌باشد</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="lg:col-span-4">
+                    <div class="hidden rounded-lg bg-muted p-4 shadow lg:block">
+                        <div class="mb-2 divide-y">
+                            <div
+                                class="flex items-center justify-between gap-x-2 py-6"
+                            >
+                                <div class="text-sm text-text/95 lg:text-base">
+                                    قیمت کالا ها (<span data-checkout-count
+                                        >{itemCount}</span
+                                    >)
+                                </div>
+                                <div
+                                    class="flex items-center gap-1 text-sm lg:text-base"
+                                >
+                                    <div class="font-bold" data-cart-subtotal>
+                                        0
+                                    </div>
+                                    <div class="text-xs lg:text-sm">تومان</div>
+                                </div>
+                            </div>
+                            <div
+                                class="flex items-center justify-between gap-x-2 py-6"
+                            >
+                                <div class="text-sm text-text/95 lg:text-base">
+                                    تخفیف کالا ها
+                                </div>
+                                <div
+                                    class="flex items-center gap-1 text-sm font-medium text-warning lg:text-base"
+                                >
+                                    <div class="font-bold" data-cart-discount>
+                                        0
+                                    </div>
+                                    <div class="text-xs lg:text-sm">تومان</div>
+                                </div>
+                            </div>
+                            <div
+                                class="flex items-center justify-between gap-x-2 py-6"
+                            >
+                                <div class="text-sm text-text/95 lg:text-base">
+                                    مبلغ قابل پرداخت
+                                </div>
+                                <div
+                                    class="flex items-center gap-1 text-sm text-primary lg:text-base"
+                                >
+                                    <div class="font-bold" data-cart-total>
+                                        0
+                                    </div>
+                                    <div class="text-xs lg:text-sm">تومان</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <a
+                                href="/checkout/shipping"
+                                data-checkout-button
+                                class="inline-flex h-11 w-full items-center justify-center gap-x-2 whitespace-nowrap rounded-md bg-primary-btn px-8 text-sm font-medium text-white ring-offset-background transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
+                            >
+                                ادامه فرایند خرید
+                            </a>
+                        </div>
+                    </div>
+                    <div
+                        class="fixed inset-x-0 bottom-0 z-20 rounded-t-xl bg-muted px-4 pb-20 pt-4 transition-all duration-300 lg:hidden"
+                        data-onscrollclass="translate-y-1/2"
+                    >
+                        <div>
+                            <a
+                                href="/checkout/shipping"
+                                data-checkout-button
+                                class="inline-flex h-10 w-full items-center justify-center gap-x-2 whitespace-nowrap rounded-md bg-primary-btn px-4 py-2 text-sm font-medium text-white ring-offset-background transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
+                            >
+                                ادامه | <span data-cart-total>0</span>
+                                <span class="text-xs"> تومان </span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</Layout>
+
+<script>
+    import "../../scripts/checkout";
+</script>
