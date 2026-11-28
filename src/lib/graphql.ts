@@ -1,5 +1,5 @@
 import { GraphQLClient } from 'graphql-request';
-import type { Product, ProductsResponse, ProductsFilterInput } from '../types/product';
+import type { Product, ProductDetail, ProductsResponse, ProductsFilterInput } from '../types/product';
 import type { Category } from '../types/category';
 
 export const createClient = (token?: string) => {
@@ -79,7 +79,20 @@ export const fetchProduct = async (id: string, token?: string): Promise<Product>
     return data.product;
 };
 
-export const fetchProductBySlug = async (slug: string, token?: string): Promise<Product> => {
+export const fetchAllProducts = async (): Promise<Product[]> => {
+    const pageSize = 100;
+    const firstPage = await fetchProducts({}, pageSize);
+    const products = [...firstPage.items];
+
+    for (let offset = pageSize; offset < firstPage.total; offset += pageSize) {
+        const page = await fetchProducts({}, pageSize, offset);
+        products.push(...page.items);
+    }
+
+    return products;
+};
+
+export const fetchProductBySlug = async (slug: string, token?: string): Promise<ProductDetail> => {
     const client = createClient(token);
 
     const query = `
@@ -103,13 +116,39 @@ export const fetchProductBySlug = async (slug: string, token?: string): Promise<
                     url
                     altText
                 }
+                catalog {
+                    sellingModes {
+                        mode
+                        purchasePolicy
+                        minimumPacks
+                        variants {
+                            id
+                            name
+                            available
+                            packContents {
+                                name
+                                quantity
+                            }
+                            prices {
+                                currencyCode
+                                currencySymbol
+                                amount
+                                amountPerItem
+                            }
+                        }
+                    }
+                    deliveryConditions {
+                        shippingIncludedInPrice
+                        destinationRequiredForQuote
+                    }
+                }
                 createdAt
                 updatedAt
             }
         }
     `;
 
-    const data = await client.request<{ product: Product }>(query, { slug });
+    const data = await client.request<{ product: ProductDetail }>(query, { slug });
 
     return data.product;
 };

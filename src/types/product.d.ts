@@ -33,6 +33,36 @@ export type ProductsResponse = {
     offset: number,
 }
 
+export type CatalogPrice = {
+    currencyCode: string;
+    currencySymbol: string;
+    amount: `${number}`;
+    amountPerItem: `${number}`;
+};
+
+type CatalogSellingMode = {
+    mode: "RETAIL" | "WHOLESALE";
+    purchasePolicy: "INSTANT" | "TEAM_VERIFICATION";
+    minimumPacks: number | null;
+    variants: {
+        id: string;
+        name: string;
+        available: boolean;
+        packContents: { name: string; quantity: number }[];
+        prices: CatalogPrice[];
+    }[];
+};
+
+export type ProductDetail = Product & {
+    catalog: {
+        sellingModes: CatalogSellingMode[];
+        deliveryConditions: {
+            shippingIncludedInPrice: boolean;
+            destinationRequiredForQuote: boolean;
+        };
+    };
+};
+
 export type ProductsFilterInput = {
     priceLte?: number,
     priceGte?: number,
